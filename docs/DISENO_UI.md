@@ -7,7 +7,7 @@
 
 ## 1. Librería de UI (decidida)
 
-**Angular Material** es la librería recomendada y más idónea para este proyecto, porque:
+**Angular Material** es la librería usada, porque:
 
 - Es la librería oficial de Angular, mantenida por el equipo de Angular.
 - Se integra nativamente con Angular CLI (`ng add @angular/material`).
@@ -15,12 +15,21 @@
 - Theming claro (solo tema claro, sin modo oscuro).
 - Encaja con el requisito "más sencillo" que HCRUDA-js y con el stack Angular 22 (standalone components, signals).
 
-Instalación:
+Instalación ya realizada:
 ```bash
 ng add @angular/material
+ng install @angular/animations --legacy-peer-deps
 ```
 
-Si el usuario prefiere otra librería (Tailwind, PrimeNG, Bootstrap Angular, etc.), este documento se actualiza y se comunica al agente antes de escribir CSS/HTML.
+Tema prebuilt importado en `src/styles.css`:
+```css
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+```
+
+Fuente de Material Icons importada en `src/index.html`:
+```html
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+```
 
 ---
 
@@ -30,29 +39,31 @@ Si el usuario prefiere otra librería (Tailwind, PrimeNG, Bootstrap Angular, etc
 |-------|-------|
 | Tema | **Solo claro.** No inventar modo oscuro salvo petición explícita. |
 | Fuentes | Sans ancha y legible (Lexend → Montserrat → Manrope). No Inter/Roboto/Arial como principal. |
-| Colores | Grises azulados fríos + un único acento cian (identidad HCRUDA). |
+| Colores | Grises azulados fríos + acento de Angular Material (indigo/pink por defecto). |
 | Bordes | Cero bordes duros, cero negros, cero blancos puros. |
-| Sombras | Luz siempre desde arriba-izquierda. Usar tokens, nunca hex ni sombras escritas a mano. |
 | Accesibilidad | WCAG AA (contraste, foco visible, táctil ≥ 44×44 px). |
-| `:focus-visible` | Siempre visible con anillo; nunca `outline: none` sin sustituto. |
-| Inputs | Usar las clases/componentes de la librería de UI elegida (consistentes en toda la app). |
+| `:focus-visible` | Siempre visible; nunca `outline: none` sin sustituto. |
+| Inputs | Usar componentes de Angular Material (`mat-form-field`, `matInput`, `mat-select`) consistentes en toda la app. |
+| **NUNCA** | CSS/design-system neumorfico de HCRUDA-js, SnackBar, modo oscuro. |
 
 ---
 
-## 3. Componentes de UI a usar (Angular Material)
+## 3. Componentes de Angular Material usados
 
-| Componente Angular Material | Uso en HCRUDA-ng |
-|----------------------------|------------------|
+| Componente | Uso en HCRUDA-ng |
+|------------|------------------|
 | `mat-form-field` + `matInput` | Formularios (login, registro, alta/editar entidades) |
 | `mat-select` | Filtros (tipo, departamento, estado) y formularios |
 | `mat-table` | Listados de pacientes, doctores, citas, tratamientos |
 | `mat-button` / `mat-icon-button` | Acciones (guardar, eliminar, editar, cerrar sesión) |
-| `mat-card` | Modo ficha / detalle de entidades |
-| `mat-badge` | Estados (tipo de paciente, estado de cita/tratamiento) |
+| `mat-card` | Tarjetas de resumen, tarjeta de login |
 | `mat-sidenav` | Menú lateral de navegación |
-| `mat-toolbar` | Header de páginas |
-| `mat-icon` | Iconografía |
-| `mat-list` / `mat-menu` | Menús y listas de navegación |
+| `mat-toolbar` | Barra superior de páginas |
+| `mat-icon` | Iconografía (Material Icons) |
+| `mat-list` / `mat-nav-list` | Menús y listas de navegación |
+| `mat-badge` | Estados (reemplazado por `<span class="etiqueta">` para simplicidad) |
+
+> Nota: `mat-badge` se evitó por simplicidad; se usan `<span>` con clases CSS personalizadas para etiquetas de estado.
 
 ---
 
@@ -61,4 +72,5 @@ Si el usuario prefiere otra librería (Tailwind, PrimeNG, Bootstrap Angular, etc
 - **NUNCA** el CSS/design-system neumorfico de HCRUDA-js.
 - **NUNCA** valores hex ni sombras escritas a mano fuera de los tokens de la librería.
 - **NUNCA** modo oscuro.
+- **NUNCA** SnackBar (mensajes se muestran en pantalla directamente).
 - **NUNCA** Inter/Roboto/Arial como fuente principal.

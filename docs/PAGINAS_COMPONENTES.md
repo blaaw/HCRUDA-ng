@@ -5,67 +5,71 @@
 
 ---
 
-## 1. Página Login (`/login`)
+## 1. Página Login (`/login`) — IMPLEMENTADA
 
 **Responsabilidad:** Página de entrada única de la aplicación.
 
-- Formulario de acceso con usuario y contraseña.
+- Formulario de acceso con **código de usuario** y contraseña.
 - Validación de campos vacíos antes de enviar.
 - Al autenticar, guarda sesión en `sessionStorage` y redirige al dashboard.
 - Enlace a la página de registro.
-- Componente independiente (standalone), sin `router-outlet` propio.
+- Uso obligatorio de `setTimeout` (pequeña pausa antes de redirigir, requisito del curso).
+- Mensajes de error mostrados en pantalla directamente (sin SnackBar).
+- Autentica contra `/json/usuarios.json` (mapea `id`→`codigo`, `password`→`contrasena`).
+
+**Nombres en español (TS):** `codigoUsuario`, `contrasenaUsuario`, `estaCargando`, `mensajeError`, `iniciarSesion()`, `servicioUsuarios`.
 
 ---
 
-## 2. Página Registro (`/registro`)
+## 2. Página Registro (`/registro`) — PENDIENTE
 
 **Responsabilidad:** Alta de nuevo usuario (médico o enfermero).
 
 - Campos: nombre, apellidos, DNI, email, rol, contraseña, confirmar contraseña.
 - Validación con expresiones regulares (formato DNI, longitud de contraseña, campos obligatorios).
-- Inputs y select con clases de la librería de UI (ver `docs/DISENO_UI.md`).
 - Al registrar con éxito, redirige al login.
 
 ---
 
-## 3. Página Dashboard (`/dashboard`)
+## 3. Página Dashboard (`/dashboard`) — IMPLEMENTADA
 
-**Responsabilidad:** Panel principal. Solo accesible con sesión iniciada (si no, redirige al login).
+**Responsabilidad:** Panel principal. Solo accesible con sesión iniciada (protegido por `SesionGuard`).
 
-- Header con logo, título, bloque de usuario (avatar + nombre y rol) y botón Cerrar sesión.
-- Resumen arriba: conteos de pacientes, doctores, citas y tratamientos (por estado: Activos, Finalizados, Suspendidos, y total).
-- Tabla de pacientes: búsqueda por nombre + tabla (Nombre, Apellidos, DNI, Teléfono, Tipo badge, Tratamiento). Filtro por nombre.
-- Tabla de doctores: búsqueda por nombre + tabla (Nombre, Apellidos, DNI, Especialidad, Departamento badge). Filtros por nombre y departamento.
-- Componente citas: botones por estado (Pendientes, Confirmadas, Completadas, Canceladas, Todas) con total de citas.
-- Menú lateral con hamburguesa.
-- Navega a pacientes.html y doctores.html al clic en una fila.
+- **Header** con logo, título, bloque de usuario (avatar + nombre y rol) y botón Cerrar sesión.
+- **Menú lateral** (sidenav) con navegación a todas las páginas.
+- **Resumen**: tarjetas con conteos de pacientes, doctores y citas.
+- **Tabla pacientes**: búsqueda por nombre + tabla (Nombre, Apellidos, DNI, Tipo, Acción). Clic en fila para detalle.
+- **Tabla doctores**: filtros por nombre y departamento + tabla (Nombre, Apellidos, Especialidad, Departamento, Acción).
+- **Cerrar sesión**: limpia `sessionStorage` y redirige a `/login`.
+- `setTimeout` para mensaje de bienvenida (requisito del curso).
+
+**Nombres en español (TS):** `usuarioConectado`, `listaPacientes`, `listaMedicos`, `cargarInformacion()`, `cerrarSesion()`, `irAPagina()`, `verDetallePaciente()`, `rastrearPorId()`.
 
 ---
 
-## 4. Página Pacientes (`/pacientes`)
+## 4. Página Pacientes (`/pacientes`) — PENDIENTE
 
 **Responsabilidad:** CRUD completo de pacientes (tabla para este tipo de objeto).
 
-- Formulario de alta horizontal arriba del main (nombre, apellidos, DNI, teléfono, tipo).
-- Tabla con filtros (search por nombre + select por tipo) y columnas: Nombre, Apellidos, Teléfono, Tipo.
-- Detalle del paciente seleccionado en **modo ficha** (avatar, nombre, DNI, teléfono, tipo, tratamiento, botones Editar/Eliminar).
-- Alta, modificación y eliminación con validación del modelo (`paciente.validar()`).
+- Formulario de alta (nombre, apellidos, DNI, teléfono, tipo).
+- Tabla con filtros (search por nombre + select por tipo).
+- Detalle del paciente en **modo ficha**.
+- Alta, modificación y eliminación con validación del modelo (`paciente.esValido()`).
 - Persistencia en `sessionStorage` tras cada CRUD.
 
 ---
 
-## 5. Página Doctores (`/doctores`)
+## 5. Página Doctores (`/doctores`) — PENDIENTE
 
 **Responsabilidad:** CRUD completo de doctores (modo ficha para este tipo).
 
-- Formulario de alta horizontal arriba del main (nombre, apellidos, DNI, especialidad, departamento).
-- Tabla con filtros (search por nombre + select por departamento) y columnas: Nombre, Apellidos, DNI, Especialidad, Departamento.
-- Detalle del doctor seleccionado como componente de detalle (`<app-detalle-medico>`) con botones Editar y Eliminar.
-- Menú lateral con hamburguesa.
+- Formulario de alta (nombre, apellidos, DNI, especialidad, departamento).
+- Tabla con filtros (search por nombre + select por departamento).
+- Detalle del doctor en **modo ficha** con botones Editar y Eliminar.
 
 ---
 
-## 6. Página Citas (`/citas`)
+## 6. Página Citas (`/citas`) — PENDIENTE
 
 **Responsabilidad:** CRUD completo de citas.
 
@@ -77,7 +81,7 @@
 
 ---
 
-## 7. Página Tratamientos (`/tratamientos`)
+## 7. Página Tratamientos (`/tratamientos`) — PENDIENTE
 
 **Responsabilidad:** CRUD completo de tratamientos.
 
@@ -92,20 +96,19 @@
 **Responsabilidad:** Mostrar el detalle de una entidad (ruta `/detalle/:tipo/:id`).
 
 - Recibe el `id` por parámetro de ruta (`ActivatedRoute`, `paramMap`).
-- Recupera la entidad mediante el servicio (`getHeroe(id)` / `getPaciente(id)`, etc.).
+- Recupera la entidad mediante el servicio.
 - Muestra los datos en modo ficha.
-- Botón Volver (`Location.back()`) y botón Guardar/Actualizar (`actualizarHeroe` → `http.put`).
+- Botón Volver (`Location.back()`) y botón Guardar/Actualizar.
 
 ---
 
 ## 9. Componente Menú / Navegación
 
-**Responsabilidad:** Menú de navegación reutilizable (requisito original: "menú como componente Web").
+**Responsabilidad:** Menú de navegación reutilizable.
 
 - Componente standalone reutilizable.
 - Muestra enlaces de navegación según el rol del usuario logueado.
 - Solo aparece si el usuario está logueado.
-- Enlaces: Citas, Pacientes, Doctores, Tratamientos, Dashboard, Cerrar sesión.
 
 ---
 
@@ -113,9 +116,9 @@
 
 | Mecanismo | Uso en el proyecto |
 |-----------|-------------------|
-| `@Input()` / `@Output()` | Padre ↔ hijo (ej. detalle recibe entidad, emite evento de guardado) |
-| Servicios | Estado compartido entre páginas no relacionadas (lista de pacientes, mensajes) |
-| Signals | Contadores reactivos (ej. total de citas, notificaciones) |
+| `@Input()` / `@Output()` | Padre ↔ hijo |
+| Servicios | Estado compartido entre páginas no relacionadas |
+| Signals | Contadores reactivos |
 | `sessionStorage` / `localStorage` | Sesión y persistencia de CRUD entre recargas |
 
 ---
@@ -123,6 +126,6 @@
 ## 11. Eventos requeridos
 
 - `click`: botones de guardar, eliminar, editar, cerrar sesión, menú.
-- `keypress` / `input`: búsqueda por nombre (keyup en search bar).
+- `keypress` / `input`: búsqueda por nombre.
 - `change`: selects de filtro (tipo, departamento, estado).
-- `setInterval` / `setTimeout`: uso obligatorio en algún punto de la app (ej. temporizador de sesión, refresco de notificaciones, mensaje automático).
+- `setInterval` / `setTimeout`: uso obligatorio del curso.

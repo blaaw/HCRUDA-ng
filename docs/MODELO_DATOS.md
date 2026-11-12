@@ -15,9 +15,16 @@
 
 ## 2. Interfaces TypeScript (modelo de datos)
 
-Cada entidad se define como una `interface` en `src/app/models/`. Ejemplo de convención:
+Cada entidad se define como una `interface` en `src/app/models/`. Ejemplo de convención (nombres en español donde no sea de Angular):
 
 ```typescript
+export interface Usuario {
+  codigo: string;      // mapeado desde "id" del JSON
+  nombre: string;
+  rol: "medico" | "enfermero";
+  contrasena: string;  // mapeado desde "password" del JSON
+}
+
 export interface Departamento {
   id: string;
   nombre: string;
@@ -60,72 +67,53 @@ export interface Tratamiento {
   fechaInicio: string;
   estado: "activo" | "finalizado" | "suspendido";
 }
-
-export interface Usuario {
-  id: string;
-  nombre: string;
-  rol: "medico" | "enfermero";
-  password: string;
-}
 ```
 
 **Regla:** cada interfaz debe tener **≥ 5 campos**.
 
 ## 3. Clases de modelo (lógica de negocio)
 
-Además de las interfaces, crear una **clase por entidad** en `src/app/models/` que encapsule campos, constructor, `toJSON()`, `validar()` y **al menos 3 métodos propios**. La clase no manipula el DOM, no llama a `HttpClient` ni a `sessionStorage`. Solo datos y lógica de negocio.
+Además de las interfaces, crear una **clase por entidad** en `src/app/models/` que encapsule campos, constructor, `esValido()`, `aObjetoPlano()` y **al menos 1 método adicional** (total ≥ 3 métodos). La clase no manipula el DOM, no llama a `HttpClient` ni a `sessionStorage`. Solo datos y lógica de negocio.
 
-Ejemplo (`src/app/models/paciente.model.ts`):
+Ejemplo (`src/app/models/usuario.model.ts`):
 
 ```typescript
-export class Paciente {
-  id: string;
+export class UsuarioClass implements Usuario {
+  codigo: string;
   nombre: string;
-  apellidos: string;
-  dni: string;
-  telefono: string;
-  tipo: "urgencia" | "planta" | "casa";
+  rol: "medico" | "enfermero";
+  contrasena: string;
 
-  constructor(id: string, nombre: string, apellidos: string,
-              dni: string, telefono: string, tipo: "urgencia" | "planta" | "casa") {
-    this.id = id;
+  constructor(codigo: string, nombre: string, rol: "medico" | "enfermero", contrasena: string) {
+    this.codigo = codigo;
     this.nombre = nombre;
-    this.apellidos = apellidos;
-    this.dni = dni;
-    this.telefono = telefono;
-    this.tipo = tipo;
+    this.rol = rol;
+    this.contrasena = contrasena;
   }
 
-  // Método 1: validación de campos del objeto
-  validar(): boolean {
-    return !!this.nombre && !!this.apellidos && !!this.dni && !!this.telefono;
+  // Método 1: verificar contraseña
+  verificarContrasena(contrasenaIngresada: string): boolean {
+    return this.contrasena === contrasenaIngresada;
   }
 
   // Método 2: conversión a objeto plano (JSON/storage)
-  toJSON(): object {
+  aObjetoPlano(): object {
     return {
-      id: this.id,
+      codigo: this.codigo,
       nombre: this.nombre,
-      apellidos: this.apellidos,
-      dni: this.dni,
-      telefono: this.telefono,
-      tipo: this.tipo
+      rol: this.rol,
+      contrasena: this.contrasena
     };
   }
 
-  // Método 3: cambiar tipo de paciente
-  cambiarTipo(nuevoTipo: "urgencia" | "planta" | "casa"): void {
-    this.tipo = nuevoTipo;
-  }
-
-  // Método 4 (opcional, recomendado): resumen legible
-  getResumen(): string {
-    return `${this.nombre} ${this.apellidos} — ${this.tipo}`;
+  // Método 3: validar campos obligatorios
+  esValido(): boolean {
+    return !!this.codigo && !!this.nombre && !!this.rol && !!this.contrasena;
   }
 }
 ```
 
-> Requisito del curso: cada objeto debe tener constructor y **≥ 3 métodos adicionales**. Aplicar el mismo patrón a `Departamento`, `Medico`, `Cita`, `Tratamiento`, `Usuario` (con `autenticar(pwd)` para Usuario).
+> Requisito del curso: cada objeto debe tener constructor y **≥ 3 métodos adicionales**. Aplicar el mismo patrón a `Departamento`, `Medico`, `Paciente`, `Cita`, `Tratamiento`.
 
 ## 4. Relaciones (claves foráneas simuladas)
 
@@ -161,14 +149,16 @@ Formato: array de objetos planos (sin métodos):
 
 ```json
 [
-  { "id": "P001", "nombre": "Luis", "apellidos": "Martín",
-    "dni": "11111111A", "telefono": "600111222", "tipo": "urgencia" }
+  { "id": "U001", "nombre": "Ana García López", "rol": "medico", "password": "clave123" }
 ]
 ```
 
+> **Importante:** El JSON usa `id` y `password`. El servicio de usuarios debe mapear estos campos a `codigo` y `contrasena` del modelo de la app antes de usarlos.
+
 ## 6. Flujo de carga inicial (seed)
 
-1. El servicio de datos hace `this.http.get<T[]>("/json/entidad.json")`.
-2. Al recibir el array, se recorren los objetos y se crean instancias de la clase: `new Paciente(p.id, p.nombre, ...)`.
-3. El array de instancias se mantiene en memoria (servicio) y se expone como `Observable`.
-4. Tras cada operación CRUD, persistir en `sessionStorage`/`localStorage` con `JSON.stringify(array.map(o => o.toJSON()))`.
+1. El servicio de datos hace `this.http.get<any[]>("/json/entidad.json")`.
+2. Se mapean los campos del JSON al modelo de la app (ej. `id` → `codigo`, `password` → `contrasena`).
+3. Se crean instancias de la clase: `new UsuarioClass(item.codigo, item.nombre, ...)`.
+4. El array de instancias se mantiene en memoria (servicio) y se expone como `Observable`.
+5. Tras cada operación CRUD, persistir en `sessionStorage`/`localStorage` con `JSON.stringify(array.map(o => o.aObjetoPlano()))`.

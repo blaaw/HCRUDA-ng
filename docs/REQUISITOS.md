@@ -22,9 +22,9 @@ Es como una CRM/ERP de hospital: citas, tratamientos y departamentos, con relaci
 
 | Ruta | Página | Responsabilidad |
 |------|--------|-----------------|
-| `/` o `/login` | **Login** | Página de entrada. Formulario de acceso (usuario/contraseña). Validación de campos vacíos. Guarda sesión y redirige al dashboard. Enlace a registro. |
+| `/` o `/login` | **Login** | Página de entrada. Formulario de acceso (código/contraseña). Validación de campos vacíos. Guarda sesión y redirige al dashboard. Enlace a registro. |
 | `/registro` | **Registro** | Alta de nuevo usuario (médico o enfermero). Campos: nombre, apellidos, DNI, email, rol, contraseña, confirmar contraseña. Validación con expresiones regulares (formato DNI, longitud de contraseña, obligatorios). |
-| `/dashboard` | **Dashboard** | Solo accesible con sesión. Resumen (conteos), tablas de pacientes y doctores, componente de citas, resumen de tratamientos por estado. Menú lateral. Navega a pacientes/doctores. |
+| `/dashboard` | **Dashboard** | Solo accesible con sesión. Resumen (conteos), tablas de pacientes y doctores, componente de citas, resumen de tratamientos por estado. Menú lateral. |
 | `/pacientes` | **Pacientes** | CRUD de pacientes: listado (tabla), alta, modificación, eliminación. Filtro por nombre y tipo. Detalle en modo ficha. |
 | `/doctores` | **Doctores** | CRUD de doctores: listado (tabla), alta, modificación, eliminación. Filtro por nombre y departamento. Detalle en modo ficha. |
 | `/citas` | **Citas** | CRUD completo de citas. Filtrado por fecha, médico, paciente o estado. Ordenado por distintos campos. |
@@ -40,6 +40,7 @@ Es como una CRM/ERP de hospital: citas, tratamientos y departamentos, con relaci
 - Página de login y de registro con **validación de formularios** (expresiones regulares, tipos, campos obligatorios).
 - **Gestión de sesión y perfil**: el perfil `admin` debe tener acceso a la parte de la aplicación que permite gestionar todas las tablas.
 - Uso de `sessionStorage` y `localStorage` para sesión y datos del CRUD.
+- Autenticación por **código de usuario** (campo `id` del JSON) y contraseña.
 
 ### Gestión de objetos (≥ 2 tipos con relación)
 - Cada objeto: **≥ 5 campos**, constructor y **≥ 3 métodos adicionales** (en clases de modelo).
@@ -61,10 +62,11 @@ Es como una CRM/ERP de hospital: citas, tratamientos y departamentos, con relaci
 ### Requisitos técnicos obligatorios (del curso)
 - **Rutas** (alguna con parámetros, ej. detalle de paciente/cita).
 - **Servicios HTTP con Observables** (`HttpClient`, `provideHttpClient`, `.subscribe()`).
-- **Carga inicial de objetos** desde JSON (no partir del sistema vacío). `fetch`/`HttpClient` de `/json/*.json` al arrancar.
+- **Carga inicial de objetos** desde JSON (no partir del sistema vacío). `HttpClient` de `/json/*.json` al arrancar.
 - Uso obligatorio de **`setInterval` y `setTimeout`**.
 - Uso de **cookies y storage** (`sessionStorage` / `localStorage`).
 - Código organizado, comentado, legible (nombres de variables y métodos en español).
+- **NUNCA** usar SnackBar (mensajes se muestran en pantalla directamente).
 
 ### Opcional (ampliar nota hasta el 10)
 - Animaciones.
@@ -114,4 +116,4 @@ Los JSON de seed viven en `public/json/` y se leen mediante `HttpClient` desde l
 | Tratamiento | id, pacienteId, medicoId, descripcion, fechaInicio, estado ("activo"\|"finalizado"\|"suspendido") |
 | Usuario (login) | id, nombre, rol ("medico"\|"enfermero"), password |
 
-> Cada clase del modelo: constructor + `toJSON()` + `validar()` + ≥ 3 métodos propios (ej. `cambiarEstado()`, `getResumen()`, `cambiarTipo()`, `autenticar()`).
+> Cada clase del modelo: constructor + `esValido()` + `aObjetoPlano()` + ≥ 1 método adicional (ej. `verificarContrasena()`, `cambiarEstado()`, `cambiarTipo()`, `finalizar()`).

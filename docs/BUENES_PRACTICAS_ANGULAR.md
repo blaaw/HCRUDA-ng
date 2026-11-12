@@ -15,29 +15,26 @@ Ejemplo de componente standalone:
 
 ```typescript
 @Component({
-  selector: 'app-pacientes',
+  selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, FormsModule, UpperCasePipe, TablaEntidadComponent],
-  templateUrl: './pacientes.html',
-  styleUrl: './pacientes.css'
+  imports: [CommonModule, FormsModule, RouterLink, MatToolbarModule, ...],
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.css'
 })
-export class PacientesPage implements OnInit { ... }
+export class PaginaDashboard implements OnInit { ... }
 ```
 
 ---
 
 ## 2. Estado reactivo: Signals y inject()
 
-- Usar **`signal()`** para el estado reactivo del componente (ej. `title = signal('HCRUDA-ng')`).
+- Usar **`signal()`** para el estado reactivo del componente (ej. `usuarioConectado = signal<...>(null)`).
 - Usar **`inject()`** para inyectar servicios en lugar de inyección por constructor (estilo Angular 22):
 
 ```typescript
-export class Heroes implements OnInit {
-  private heroeServicio = inject(GestionarHeroes);
+export class PaginaLogin implements OnInit {
+  private servicioUsuarios = inject(ServicioUsuarios);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private location = inject(Location);
-  private http = inject(HttpClient);
   ...
 }
 ```
@@ -54,33 +51,30 @@ Según el manual, hay 3 opciones. **Usar la Opción 2 (Observables)**, que es la
 ### Opción 2 (Observables) — **LA QUE SE USA.**
 ### Opción 3 (Promesas) — solo si se justifica.
 
-Ejemplo de servicio correcto (v22):
+Ejemplo de servicio correcto (v22, simplificado):
 
 ```typescript
-import { Service, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { Paciente } from '../models/paciente.model';
-
 @Service()
-export class GestionarPacientes {
-  private apiUrl = '/json/pacientes.json';
+export class ServicioUsuarios {
+  private urlJson = '/json/usuarios.json';
   private http = inject(HttpClient);
 
-  getPacientes(): Observable<Paciente[]> {
-    return this.http.get<Paciente[]>(this.apiUrl).pipe(
-      tap(_ => console.log('fetched pacientes')),
-      catchError(this.handleError<Paciente[]>('getPacientes', []))
+  obtenerUsuarios(): Observable<Usuario[]> {
+    return this.http.get<any[]>(this.urlJson).pipe(
+      map(listaRaw => listaRaw.map(item => ({
+        codigo: item.id,
+        nombre: item.nombre,
+        rol: item.rol,
+        contrasena: item.password
+      }))),
+      catchError(() => of([]))
     );
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      console.log(`${operation} failed: ${error.message}`);
-      return of(result as T);
-    };
+  verificarCredenciales(codigo: string, contrasena: string): Observable<Usuario | undefined> {
+    return this.obtenerUsuarios().pipe(
+      map(lista => lista.find(u => u.codigo === codigo && u.contrasena === contrasena))
+    );
   }
 }
 ```
@@ -94,12 +88,14 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient()
+    provideHttpClient(),
+    provideAnimations() // necesario para Angular Material
   ]
 };
 ```
 
-- Manejar errores HTTP con `catchError`, `tap` y `of()` (never dejar una petición sin manejo de error).
+- Manejar errores HTTP con `catchError` y `of()` (never dejar una petición sin manejo de error).
+- **NUNCA** usar SnackBar para mensajes de error; mostrar en pantalla directamente.
 
 ---
 
@@ -118,6 +114,7 @@ const id = Number(this.route.snapshot.paramMap.get('id'));
 
 - `Location` para `goBack()` (volver atrás).
 - Ruta por defecto (redirectTo) al dashboard o al login.
+- `CanMatchFn` para guardia de sesión (protege rutas que requieren login).
 
 ---
 
@@ -129,10 +126,8 @@ const id = Number(this.route.snapshot.paramMap.get('id'));
 - Ejemplo:
 
 ```html
-<input [(ngModel)]="usuario.dni" pattern="^[0-9]{8}[A-Z]$" required>
+<input matInput name="codigo" [(ngModel)]="codigoUsuario" required placeholder="Ej: U001" />
 ```
-
-- Para formularios reactivos más complejos, se puede usar `ReactiveFormsModule` (importarlo en `imports`).
 
 ---
 
@@ -142,17 +137,15 @@ const id = Number(this.route.snapshot.paramMap.get('id'));
 - `@if / @else` para condicionales.
 - `@for (item of list; track item.id)` para listas (obligatorio `track`).
 - `@switch / @case / @default` para múltiples condiciones.
-- `@if(heroe)` para mostrar detalle solo cuando hay entidad seleccionada.
 
 Ejemplo:
 
 ```html
-@if (heroe) {
-  <h2>{{ heroe.nombre | uppercase }} Detalles</h2>
-  <div><span>id: </span>{{ heroe.id }}</div>
+@if (usuarioConectado()) {
+  <div class="info-usuario">{{ usuarioConectado()?.nombre }}</div>
 }
-@for (paciente of pacientes; track paciente.id) {
-  <li (click)="seleccionar(paciente)">{{ paciente.nombre }}</li>
+@for (paciente of pacientesFiltrados; track paciente.id) {
+  <li>{{ paciente.nombre }}</li>
 }
 ```
 
@@ -163,7 +156,6 @@ Ejemplo:
 - Las tuberías (`|`) dan formato a textos, monedas, fechas, etc.
 - Toda pipe usada en una plantilla debe importarse en el `imports` del componente.
 - Ejemplos: `UpperCasePipe`, `DatePipe`, `DecimalPipe`, `CurrencyPipe`.
-- Se pueden crear pipes personalizadas si se necesita.
 
 ---
 
@@ -172,23 +164,15 @@ Ejemplo:
 - **`@Input()`**: recibe datos de un componente padre.
 - **`@Output()`**: emite eventos hacia el padre.
 - **Servicios**: comunicación entre componentes no relacionados (estado compartido).
-- **Signals**: para estado reactivo compartido (ej. contador de carrito o notificaciones).
-
-Ejemplo de `@Input()`:
-
-```typescript
-export class DetalleHeroe {
-  @Input() heroe?: Heroe;
-}
-```
+- **Signals**: para estado reactivo compartido (ej. contador de notificaciones).
 
 ---
 
 ## 9. Mensajes y notificaciones (patrón del manual)
 
-- Crear un servicio de mensajes (`GestionarMensajes`) con `listaMensajes: string[]`, `add(nuevo)` y `clear()`.
-- Inyectar ese servicio en el servicio de datos para registrar mensajes (ej. "Servicio pacientes: recuperando pacientes").
-- Mostrar los mensajes en un componente de la parte baja de la pantalla (`@if(lista.length > 0)` + `@for`).
+- **NUNCA** usar `MatSnackBar` (redundante e innecesario).
+- Mensajes de error se muestran directamente en el formulario (variable `mensajeError` en el template).
+- Servicio de mensajes (`GestionarMensajes`) solo si se justifica (opcional).
 
 ---
 
