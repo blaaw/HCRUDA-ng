@@ -1,0 +1,68 @@
+.tarjeta-login {
+  max-width: 360px;
+  margin: 60px auto;
+  padding: 20px;
+}
+
+.campo-ancho {
+  width: 100%;
+}
+
+.boton-ingresar {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.contenido-boton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.acciones-login {
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.acciones-login p {
+  margin: 0;
+  font-size: 14px;
+  color: #4e5868;
+}
+
+.mensaje-error {
+  color: #b5453f;
+  background: #fdecea;
+  border: 1px solid #b5453f;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.contenedor-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.logo-login {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+mat-card-title {
+  text-align: center;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+mat-card-subtitle {
+  text-align: center;
+  color: #4e5868;
+}

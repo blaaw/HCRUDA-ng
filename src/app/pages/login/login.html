@@ -1,0 +1,44 @@
+<mat-card class="tarjeta-login">
+  <mat-card-header>
+    <div class="contenedor-logo">
+      <img src="/favicon.ico" alt="Logo HCRUDA" class="logo-login" />
+    </div>
+    <mat-card-title>HCRUDA</mat-card-title>
+    <mat-card-subtitle>Acceso al sistema</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form (ngSubmit)="iniciarSesion()">
+      <mat-form-field appearance="outline" class="campo-ancho">
+        <mat-label>Código de usuario</mat-label>
+        <input matInput name="codigo" [(ngModel)]="codigoUsuario" required placeholder="Ej: U001" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="campo-ancho">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" name="contrasena" [(ngModel)]="contrasenaUsuario" required placeholder="Contraseña" />
+      </mat-form-field>
+
+      @if (mensajeError) {
+        <div class="mensaje-error">{{ mensajeError }}</div>
+      }
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="estaCargando" class="boton-ingresar">
+        <span class="contenido-boton">
+          @if (estaCargando) {
+            <mat-icon>hourglass_empty</mat-icon>
+            <span>Ingresando...</span>
+          } @else {
+            <mat-icon>login</mat-icon>
+            <span>Iniciar sesión</span>
+          }
+        </span>
+      </button>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions class="acciones-login">
+    <p>¿No tienes cuenta?</p>
+    <a mat-button routerLink="/registro">Regístrate</a>
+  </mat-card-actions>
+</mat-card>
