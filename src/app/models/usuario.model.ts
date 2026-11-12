@@ -1,0 +1,37 @@
+export interface Usuario {
+  codigo: string;
+  nombre: string;
+  rol: "medico" | "enfermero";
+  contrasena: string;
+}
+
+export class UsuarioClass implements Usuario {
+  codigo: string;
+  nombre: string;
+  rol: "medico" | "enfermero";
+  contrasena: string;
+
+  constructor(codigo: string, nombre: string, rol: "medico" | "enfermero", contrasena: string) {
+    this.codigo = codigo;
+    this.nombre = nombre;
+    this.rol = rol;
+    this.contrasena = contrasena;
+  }
+
+  verificarContrasena(contrasenaIngresada: string): boolean {
+    return this.contrasena === contrasenaIngresada;
+  }
+
+  aObjetoPlano(): object {
+    return {
+      codigo: this.codigo,
+      nombre: this.nombre,
+      rol: this.rol,
+      contrasena: this.contrasena
+    };
+  }
+
+  esValido(): boolean {
+    return !!this.codigo && !!this.nombre && !!this.rol && !!this.contrasena;
+  }
+}
