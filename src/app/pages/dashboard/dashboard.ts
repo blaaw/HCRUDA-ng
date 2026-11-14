@@ -1,17 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatTableModule } from '@angular/material/table';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
+import { MenuSimpleComponent } from '../../components/menu-simple/menu-simple';
+import { TablaPacientesComponent } from '../../components/tabla-pacientes/tabla-pacientes';
+import { TablaMedicosComponent } from '../../components/tabla-medicos/tabla-medicos';
 import { ServicioPacientes } from '../../services/servicio-pacientes.service';
 import { ServicioMedicos } from '../../services/servicio-medicos.service';
 import { ServicioDepartamentos } from '../../services/servicio-departamentos.service';
@@ -28,18 +24,14 @@ import { Tratamiento } from '../../models/tratamiento.model';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     RouterLink,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatListModule
+    MenuSimpleComponent,
+    TablaPacientesComponent,
+    TablaMedicosComponent
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
@@ -53,25 +45,6 @@ export class PaginaDashboard implements OnInit {
   listaCitas = signal<Cita[]>([]);
   listaTratamientos = signal<Tratamiento[]>([]);
 
-  filtroNombrePaciente = '';
-  filtroNombreMedico = '';
-  filtroDepartamentoMedico = '';
-
-  get pacientesFiltrados() {
-    return this.listaPacientes().filter(p =>
-      this.filtroNombrePaciente === '' ||
-      (p.nombre + ' ' + p.apellidos).toLowerCase().includes(this.filtroNombrePaciente.toLowerCase())
-    );
-  }
-
-  get medicosFiltrados() {
-    return this.listaMedicos().filter(m =>
-      (this.filtroNombreMedico === '' ||
-        (m.nombre + ' ' + m.apellidos).toLowerCase().includes(this.filtroNombreMedico.toLowerCase())) &&
-      (this.filtroDepartamentoMedico === '' || m.departamentoId === this.filtroDepartamentoMedico)
-    );
-  }
-
   get cantidadPacientes() { return this.listaPacientes().length; }
   get cantidadMedicos() { return this.listaMedicos().length; }
   get cantidadCitas() { return this.listaCitas().length; }
@@ -83,9 +56,6 @@ export class PaginaDashboard implements OnInit {
   private servicioCitas = inject(ServicioCitas);
   private servicioTratamientos = inject(ServicioTratamientos);
   private router = inject(Router);
-
-  columnasPacientes = ['nombre', 'apellidos', 'dni', 'tipo', 'accion'];
-  columnasMedicos = ['nombre', 'apellidos', 'especialidad', 'departamento', 'accion'];
 
   ngOnInit(): void {
     const sesionGuardada = sessionStorage.getItem('usuario');
@@ -111,11 +81,6 @@ export class PaginaDashboard implements OnInit {
     return medico ? medico.nombre + ' ' + medico.apellidos : '—';
   }
 
-  obtenerNombreDepartamento(idDepartamento: string): string {
-    const depto = this.listaDepartamentos().find(d => d.id === idDepartamento);
-    return depto ? depto.nombre : '—';
-  }
-
   cerrarSesion(): void {
     sessionStorage.removeItem('usuario');
     this.usuarioConectado.set(null);
@@ -131,7 +96,8 @@ export class PaginaDashboard implements OnInit {
     this.irAPagina('/pacientes');
   }
 
-  rastrearPorId(_indice: number, elemento: any): string {
-    return elemento.id;
+  verDetalleMedico(id: string): void {
+    sessionStorage.setItem('medicoSeleccionado', id);
+    this.irAPagina('/doctores');
   }
 }

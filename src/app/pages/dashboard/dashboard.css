@@ -4,54 +4,8 @@
   height: 100vh;
 }
 
-.contenedor-menu {
-  flex: 1;
-}
-
-.menu-lateral {
-  width: 240px;
-  background: #f5f5f5;
-}
-
-.cabecera-menu {
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.logo-menu {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-}
-
-.titulo-menu {
-  margin: 0;
-  font-size: 18px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #2b3340;
-}
-
-.lista-menu {
-  padding: 6px 0;
-}
-
-.pie-menu {
-  padding: 14px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.boton-salir {
-  width: 100%;
-  text-align: left;
-  color: #b5453f;
-}
-
 .contenido-principal {
-  padding: 20px;
+  flex: 1;
   overflow-y: auto;
 }
 
@@ -61,25 +15,6 @@
   z-index: 1000;
   background: #2b3340;
   color: #fff;
-}
-
-.marca {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-barra {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-}
-
-.texto-marca {
-  font-size: 17px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 .espaciador {
@@ -166,68 +101,4 @@
 .seccion-tabla {
   padding: 0 20px;
   margin-bottom: 24px;
-}
-
-.buscador {
-  width: 260px;
-  margin-bottom: 14px;
-  display: inline-block;
-}
-
-.filtros-medicos {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 14px;
-  align-items: end;
-}
-
-.filtros-medicos mat-form-field {
-  width: 200px;
-}
-
-.tabla-datos {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-th {
-  background: #f5f5f5;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  color: #4e5868;
-  padding: 10px 14px;
-  text-align: left;
-}
-
-td {
-  padding: 10px 14px;
-  border-bottom: 1px solid #e0e0e0;
-  color: #2b3340;
-}
-
-tr:hover {
-  background: #fafafa;
-  cursor: pointer;
-}
-
-.etiqueta {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #fff;
-  background: #3f51b5;
-}
-
-.sin-datos {
-  color: #4e5868;
-  font-style: italic;
-  margin-top: 14px;
 }
