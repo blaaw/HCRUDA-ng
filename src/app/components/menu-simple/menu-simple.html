@@ -1,0 +1,24 @@
+<nav class="menu-simple">
+  <div class="logo">
+    <img src="/favicon.ico" alt="Logo HCRUDA" />
+    <span class="titulo">HCRUDA</span>
+  </div>
+
+  <ul class="enlaces">
+    @for (item of menuItems; track item.ruta) {
+      <li>
+        <a [routerLink]="item.ruta" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon>{{ item.icono }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+
+  <div class="acciones">
+    <button (click)="cerrarSesion()">
+      <mat-icon>logout</mat-icon>
+      <span>Cerrar sesión</span>
+    </button>
+  </div>
+</nav>
