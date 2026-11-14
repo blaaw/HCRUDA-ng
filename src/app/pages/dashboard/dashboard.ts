@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MenuSimpleComponent } from '../../components/menu-simple/menu-simple';
-import { TablaPacientesComponent } from '../../components/tabla-pacientes/tabla-pacientes';
-import { TablaMedicosComponent } from '../../components/tabla-medicos/tabla-medicos';
+import { GraficoCitasEstadoComponent } from '../../components/grafico-citas-estado/grafico-citas-estado';
+import { GraficoTratamientosDepartamentoComponent } from '../../components/grafico-tratamientos-departamento/grafico-tratamientos-departamento';
 import { ServicioPacientes } from '../../services/servicio-pacientes.service';
 import { ServicioMedicos } from '../../services/servicio-medicos.service';
 import { ServicioDepartamentos } from '../../services/servicio-departamentos.service';
@@ -23,8 +23,8 @@ import { Tratamiento } from '../../models/tratamiento.model';
     CommonModule,
     MatCardModule,
     MenuSimpleComponent,
-    TablaPacientesComponent,
-    TablaMedicosComponent
+    GraficoCitasEstadoComponent,
+    GraficoTratamientosDepartamentoComponent
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
@@ -38,8 +38,6 @@ export class PaginaDashboard implements OnInit {
 
   get cantidadPacientes() { return this.listaPacientes().length; }
   get cantidadMedicos() { return this.listaMedicos().length; }
-  get cantidadCitas() { return this.listaCitas().length; }
-  get citasPendientes() { return this.listaCitas().filter(c => c.estado === 'pendiente').length; }
 
   private servicioPacientes = inject(ServicioPacientes);
   private servicioMedicos = inject(ServicioMedicos);
@@ -58,11 +56,6 @@ export class PaginaDashboard implements OnInit {
     this.servicioDepartamentos.obtenerDepartamentos().subscribe(datos => this.listaDepartamentos.set(datos));
     this.servicioCitas.obtenerCitas().subscribe(datos => this.listaCitas.set(datos));
     this.servicioTratamientos.obtenerTratamientos().subscribe(datos => this.listaTratamientos.set(datos));
-  }
-
-  obtenerNombreMedico(idMedico: string): string {
-    const medico = this.listaMedicos().find(m => m.id === idMedico);
-    return medico ? medico.nombre + ' ' + medico.apellidos : '—';
   }
 
   irAPagina(ruta: string): void {
