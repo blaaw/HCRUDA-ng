@@ -2,13 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MenuSimpleComponent } from '../../components/menu-simple/menu-simple';
 import { ServicioPacientes } from '../../services/servicio-pacientes.service';
 import { Paciente } from '../../models/paciente.model';
 
 @Component({
   selector: 'app-paciente-detalle',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, MenuSimpleComponent],
   templateUrl: './paciente-detalle.html',
   styleUrl: './paciente-detalle.css'
 })
