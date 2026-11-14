@@ -1,0 +1,66 @@
+.seccion-pacientes {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.titulo-seccion {
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2b3340;
+  margin: 20px 0 12px 0;
+}
+
+.buscador {
+  width: 260px;
+  margin-bottom: 14px;
+  display: inline-block;
+}
+
+.tabla-datos {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th {
+  background: #f5f5f5;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #4e5868;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #2b3340;
+}
+
+tr:hover {
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  background: #3f51b5;
+}
+
+.sin-datos {
+  color: #4e5868;
+  font-style: italic;
+  margin-top: 14px;
+}
