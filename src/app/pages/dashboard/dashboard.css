@@ -9,60 +9,6 @@
   overflow-y: auto;
 }
 
-.barra-superior {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: #2b3340;
-  color: #fff;
-}
-
-.espaciador {
-  flex: 1 1 auto;
-}
-
-.info-usuario {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
-  background: #bbdefb;
-  color: #0d47a1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.datos-usuario {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.nombre-usuario {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.rol-usuario {
-  font-size: 12px;
-  opacity: 0.8;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.boton-cerrar {
-  color: #fff;
-}
-
 .area-contenido {
   padding: 0;
 }

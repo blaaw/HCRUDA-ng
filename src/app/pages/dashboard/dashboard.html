@@ -2,24 +2,6 @@
   <app-menu-simple></app-menu-simple>
 
   <div class="contenido-principal">
-    <mat-toolbar class="barra-superior">
-      <span class="espaciador"></span>
-
-      @if (usuarioConectado()) {
-        <div class="info-usuario">
-          <div class="avatar">{{ usuarioConectado()?.nombre.charAt(0) }}</div>
-          <div class="datos-usuario">
-            <div class="nombre-usuario">{{ usuarioConectado()?.nombre }}</div>
-            <div class="rol-usuario">{{ usuarioConectado()?.rol }}</div>
-          </div>
-          <button mat-button class="boton-cerrar" (click)="cerrarSesion()">
-            <mat-icon>logout</mat-icon>
-            <span>Salir</span>
-          </button>
-        </div>
-      }
-    </mat-toolbar>
-
     <main class="area-contenido">
       <section class="seccion-resumen">
         <h2 class="titulo-seccion">Resumen</h2>

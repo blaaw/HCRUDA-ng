@@ -1,9 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MenuSimpleComponent } from '../../components/menu-simple/menu-simple';
 import { TablaPacientesComponent } from '../../components/tabla-pacientes/tabla-pacientes';
@@ -24,10 +21,6 @@ import { Tratamiento } from '../../models/tratamiento.model';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
     MatCardModule,
     MenuSimpleComponent,
     TablaPacientesComponent,
@@ -37,8 +30,6 @@ import { Tratamiento } from '../../models/tratamiento.model';
   styleUrl: './dashboard.css'
 })
 export class PaginaDashboard implements OnInit {
-  usuarioConectado = signal<{ codigo: string; nombre: string; rol: string } | null>(null);
-
   listaPacientes = signal<Paciente[]>([]);
   listaMedicos = signal<Medico[]>([]);
   listaDepartamentos = signal<Departamento[]>([]);
@@ -58,13 +49,6 @@ export class PaginaDashboard implements OnInit {
   private router = inject(Router);
 
   ngOnInit(): void {
-    const sesionGuardada = sessionStorage.getItem('usuario');
-    if (sesionGuardada) {
-      this.usuarioConectado.set(JSON.parse(sesionGuardada));
-    } else {
-      this.router.navigate(['/login']);
-    }
-
     this.cargarInformacion();
   }
 
@@ -79,12 +63,6 @@ export class PaginaDashboard implements OnInit {
   obtenerNombreMedico(idMedico: string): string {
     const medico = this.listaMedicos().find(m => m.id === idMedico);
     return medico ? medico.nombre + ' ' + medico.apellidos : '—';
-  }
-
-  cerrarSesion(): void {
-    sessionStorage.removeItem('usuario');
-    this.usuarioConectado.set(null);
-    this.router.navigate(['/login']);
   }
 
   irAPagina(ruta: string): void {
