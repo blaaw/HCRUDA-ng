@@ -1,0 +1,12 @@
+.panel-doctores {
+  padding: 20px;
+}
+
+.titulo-pagina {
+  font-size: 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2b3340;
+  margin-bottom: 24px;
+}
