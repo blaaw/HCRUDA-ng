@@ -15,10 +15,16 @@
     }
   </ul>
 
-  <div class="acciones">
-    <button (click)="cerrarSesion()">
-      <mat-icon>logout</mat-icon>
-      <span>Cerrar sesión</span>
-    </button>
-  </div>
+  @if (usuarioConectado()) {
+    <div class="perfil-sesion">
+      <div class="info-perfil">
+        <div class="avatar">{{ usuarioConectado()?.nombre.charAt(0) }}</div>
+        <span class="nombre-usuario">{{ usuarioConectado()?.nombre }}</span>
+      </div>
+      <button class="btn-salir" (click)="cerrarSesion()">
+        <mat-icon>logout</mat-icon>
+        <span>Salir</span>
+      </button>
+    </div>
+  }
 </nav>

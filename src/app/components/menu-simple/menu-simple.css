@@ -68,32 +68,57 @@
   height: 18px;
 }
 
-.acciones {
+.perfil-sesion {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
 }
 
-.acciones button {
+.info-perfil {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background: #bbdefb;
+  color: #0d47a1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.nombre-usuario {
+  font-size: 13px;
+  color: #fff;
+}
+
+.btn-salir {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
   background: transparent;
   border: none;
-  color: #ff9800;
+  color: #ff5252;
   cursor: pointer;
   border-radius: 6px;
   font-size: 13px;
+  font-weight: 600;
 }
 
-.acciones button:hover {
-  background: #3f51b5;
+.btn-salir:hover {
+  background: #b71c1c;
   color: #fff;
 }
 
-.acciones mat-icon {
+.btn-salir mat-icon {
   font-size: 16px;
   width: 16px;
   height: 16px;
@@ -112,7 +137,7 @@
     gap: 12px;
   }
 
-  .acciones {
+  .perfil-sesion {
     justify-content: center;
     width: 100%;
     margin-top: 8px;
