@@ -69,11 +69,6 @@ export class PaginaDashboard implements OnInit {
     this.router.navigate([ruta]);
   }
 
-  verDetallePaciente(id: string): void {
-    sessionStorage.setItem('pacienteSeleccionado', id);
-    this.irAPagina('/pacientes');
-  }
-
   verDetalleMedico(id: string): void {
     sessionStorage.setItem('medicoSeleccionado', id);
     this.irAPagina('/doctores');
