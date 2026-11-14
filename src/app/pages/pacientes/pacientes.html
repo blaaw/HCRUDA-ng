@@ -1,0 +1,5 @@
+<div class="panel-pacientes">
+  <h1 class="titulo-pagina">Gestión de Pacientes</h1>
+
+  <app-tabla-pacientes [pacientes]="listaPacientes()" (seleccionarPaciente)="verDetallePaciente($event)"></app-tabla-pacientes>
+</div>
