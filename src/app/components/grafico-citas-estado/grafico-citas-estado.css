@@ -1,0 +1,17 @@
+.contenedor-grafico {
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.titulo-grafico {
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2b3340;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
