@@ -1,0 +1,41 @@
+<div class="panel-detalle">
+  @if (paciente) {
+    <div class="tarjeta-detalle">
+      <h2 class="titulo-detalle">Detalle del Paciente</h2>
+
+      <div class="campo">
+        <span class="etiqueta-campo">Nombre:</span>
+        <span class="valor-campo">{{ paciente.nombre }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="etiqueta-campo">Apellidos:</span>
+        <span class="valor-campo">{{ paciente.apellidos }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="etiqueta-campo">DNI:</span>
+        <span class="valor-campo">{{ paciente.dni }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="etiqueta-campo">Teléfono:</span>
+        <span class="valor-campo">{{ paciente.telefono }}</span>
+      </div>
+
+      <div class="campo">
+        <span class="etiqueta-campo">Tipo:</span>
+        <span class="valor-campo etiqueta-tipo">{{ paciente.tipo }}</span>
+      </div>
+
+      <div class="acciones">
+        <button (click)="volver()">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Volver</span>
+        </button>
+      </div>
+    </div>
+  } @else {
+    <p class="cargando">Cargando paciente...</p>
+  }
+</div>

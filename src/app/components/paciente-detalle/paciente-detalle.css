@@ -1,0 +1,82 @@
+.panel-detalle {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.tarjeta-detalle {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.titulo-detalle {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2b3340;
+  margin-bottom: 20px;
+}
+
+.campo {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.etiqueta-campo {
+  font-weight: 600;
+  color: #4e5868;
+}
+
+.valor-campo {
+  color: #2b3340;
+}
+
+.etiqueta-tipo {
+  background: #3f51b5;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.acciones {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.acciones button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  color: #3f51b5;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.acciones button:hover {
+  background: #e8eaf6;
+  color: #1a237e;
+}
+
+.acciones mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.cargando {
+  color: #4e5868;
+  font-style: italic;
+}
