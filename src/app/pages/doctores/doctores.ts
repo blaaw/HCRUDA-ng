@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { TablaMedicosComponent } from '../../components/tabla-medicos/tabla-medicos';
 import { MenuSimpleComponent } from '../../components/menu-simple/menu-simple';
 import { ServicioMedicos } from '../../services/servicio-medicos.service';
@@ -20,6 +21,7 @@ export class PaginaDoctores implements OnInit {
 
   private servicioMedicos = inject(ServicioMedicos);
   private servicioDepartamentos = inject(ServicioDepartamentos);
+  private router = inject(Router);
 
   ngOnInit(): void {
     this.cargarMedicos();
@@ -32,5 +34,9 @@ export class PaginaDoctores implements OnInit {
 
   cargarDepartamentos(): void {
     this.servicioDepartamentos.obtenerDepartamentos().subscribe(datos => this.listaDepartamentos.set(datos));
+  }
+
+  mostrarDetalle(idMedico: string): void {
+    this.router.navigate(['/doctores', idMedico]);
   }
 }
