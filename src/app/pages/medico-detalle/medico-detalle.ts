@@ -27,8 +27,8 @@ export class PaginaMedicoDetalle implements OnInit {
   cargarMedico(): void {
     const idMedico = this.route.snapshot.paramMap.get('id');
     if (idMedico) {
-      this.servicioMedicos.obtenerMedicos().subscribe(lista => {
-        this.medico.set(lista.find(medico => medico.id === idMedico));
+      this.servicioMedicos.obtenerMedico(idMedico).subscribe(medico => {
+        this.medico.set(medico);
         this.cargando.set(false);
       });
     } else {

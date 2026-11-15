@@ -20,4 +20,19 @@ export class ServicioUsuarios {
       catchError(() => of([]))
     );
   }
+
+  verificarCredenciales(codigo: string, contrasena: string): Observable<Usuario | undefined> {
+    return this.http.get<any[]>(this.urlJson).pipe(
+      map(listaRaw => {
+        const item = listaRaw.find(usuario => usuario.id === codigo && usuario.password === contrasena);
+        if (!item) return undefined;
+        return {
+          codigo: item.id,
+          nombre: item.nombre,
+          rol: item.rol,
+          contrasena: item.password
+        };
+      })
+    );
+  }
 }
