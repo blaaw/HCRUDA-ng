@@ -5,6 +5,7 @@ export interface Paciente {
   dni: string;
   telefono: string;
   tipo: "urgencia" | "planta" | "casa";
+  foto?: string;
 }
 
 export class PacienteClass implements Paciente {
