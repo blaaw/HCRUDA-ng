@@ -49,9 +49,12 @@ export class PaginaLogin implements OnInit {
     this.estaCargando = true;
     this.mensajeError = '';
 
-    this.servicioUsuarios.verificarCredenciales(this.codigoUsuario, this.contrasenaUsuario).subscribe({
-      next: (usuarioEncontrado) => {
+    this.servicioUsuarios.obtenerUsuarios().subscribe({
+      next: (listaUsuarios) => {
         this.estaCargando = false;
+        const usuarioEncontrado = listaUsuarios.find(
+          usuario => usuario.codigo === this.codigoUsuario && usuario.contrasena === this.contrasenaUsuario
+        );
         if (usuarioEncontrado) {
           const sesion = {
             codigo: usuarioEncontrado.codigo,

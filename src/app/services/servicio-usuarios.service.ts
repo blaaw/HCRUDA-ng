@@ -20,10 +20,4 @@ export class ServicioUsuarios {
       catchError(() => of([]))
     );
   }
-
-  verificarCredenciales(codigo: string, contrasena: string): Observable<Usuario | undefined> {
-    return this.obtenerUsuarios().pipe(
-      map(lista => lista.find(u => u.codigo === codigo && u.contrasena === contrasena))
-    );
-  }
 }
