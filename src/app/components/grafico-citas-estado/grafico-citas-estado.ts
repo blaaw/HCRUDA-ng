@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { Cita } from '../../models/cita.model';
@@ -10,7 +10,7 @@ import { Cita } from '../../models/cita.model';
   templateUrl: './grafico-citas-estado.html',
   styleUrl: './grafico-citas-estado.css'
 })
-export class GraficoCitasEstadoComponent implements OnInit {
+export class GraficoCitasEstadoComponent implements OnInit, OnChanges {
   @Input() citas: Cita[] = [];
 
   tipoGrafico: any = 'bar';
@@ -44,6 +44,10 @@ export class GraficoCitasEstadoComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.actualizarDatos();
+  }
+
+  ngOnChanges(): void {
     this.actualizarDatos();
   }
 

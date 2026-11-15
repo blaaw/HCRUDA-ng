@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { Tratamiento } from '../../models/tratamiento.model';
@@ -12,7 +12,7 @@ import { Departamento } from '../../models/departamento.model';
   templateUrl: './grafico-tratamientos-departamento.html',
   styleUrl: './grafico-tratamientos-departamento.css'
 })
-export class GraficoTratamientosDepartamentoComponent implements OnInit {
+export class GraficoTratamientosDepartamentoComponent implements OnInit, OnChanges {
   @Input() tratamientos: Tratamiento[] = [];
   @Input() medicos: Medico[] = [];
   @Input() departamentos: Departamento[] = [];
@@ -42,6 +42,10 @@ export class GraficoTratamientosDepartamentoComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.actualizarDatos();
+  }
+
+  ngOnChanges(): void {
     this.actualizarDatos();
   }
 
