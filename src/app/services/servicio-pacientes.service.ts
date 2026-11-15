@@ -1,7 +1,6 @@
 import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Paciente } from '../models/paciente.model';
 
 @Service()
@@ -11,11 +10,5 @@ export class ServicioPacientes {
 
   obtenerPacientes(): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(this.urlJson);
-  }
-
-  obtenerPaciente(id: string): Observable<Paciente | undefined> {
-    return this.obtenerPacientes().pipe(
-      map(lista => lista.find(paciente => paciente.id === id))
-    );
   }
 }
