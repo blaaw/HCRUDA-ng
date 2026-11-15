@@ -46,18 +46,22 @@
 
 .seccion-graficos {
   padding: 0 20px;
+  max-height: 400px;
+  overflow: hidden;
 }
 
 .fila-graficos {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  max-width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
   overflow: hidden;
 }
 
 @media (max-width: 768px) {
   .fila-graficos {
     grid-template-columns: 1fr;
+    max-width: 100%;
   }
 }

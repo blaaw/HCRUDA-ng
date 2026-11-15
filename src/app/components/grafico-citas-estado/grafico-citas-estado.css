@@ -3,26 +3,29 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
+  width: 450px;
+  max-width: 450px;
   height: 400px;
+  max-height: 400px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .titulo-grafico {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #2b3340;
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
   text-align: center;
 }
 
 canvas {
-  width: 100% !important;
-  height: 280px !important;
-  max-height: 280px !important;
+  width: 400px !important;
+  height: 340px !important;
+  max-width: 400px !important;
+  max-height: 340px !important;
+  margin: 0 auto;
 }
