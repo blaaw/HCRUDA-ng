@@ -1,0 +1,69 @@
+.panel-detalle {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.titulo-detalle {
+  font-size: 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2b3340;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.tarjeta-detalle {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+p {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.etiqueta {
+  font-weight: 600;
+  color: #4e5868;
+}
+
+.mensaje,
+.mensaje-error {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 16px;
+  color: #4e5868;
+}
+
+.mensaje-error {
+  color: #b5453f;
+}
+
+.boton-volver {
+  margin-top: 24px;
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #3f51b5;
+  color: #3f51b5;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.boton-volver:hover {
+  background: #3f51b5;
+  color: #fff;
+}

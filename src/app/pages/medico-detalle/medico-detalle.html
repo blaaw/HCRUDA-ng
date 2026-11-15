@@ -1,0 +1,22 @@
+<app-menu-simple></app-menu-simple>
+
+<div class="panel-detalle">
+  @if (cargando()) {
+    <p class="mensaje">Cargando médico...</p>
+  } @else if (medico()) {
+    <h1 class="titulo-detalle">{{ medico()!.nombre | uppercase }} {{ medico()!.apellidos | uppercase }}</h1>
+
+    <div class="tarjeta-detalle">
+      <div class="datos">
+        <p><span class="etiqueta">ID:</span> {{ medico()!.id }}</p>
+        <p><span class="etiqueta">DNI:</span> {{ medico()!.dni }}</p>
+        <p><span class="etiqueta">Especialidad:</span> {{ medico()!.especialidad }}</p>
+        <p><span class="etiqueta">Departamento:</span> {{ medico()!.departamentoId }}</p>
+      </div>
+
+      <button class="boton-volver" (click)="volver()">Volver a doctores</button>
+    </div>
+  } @else {
+    <p class="mensaje-error">No se encontró el médico.</p>
+  }
+</div>
