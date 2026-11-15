@@ -6,6 +6,9 @@
   width: 100%;
   max-width: 100%;
   overflow: hidden;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .titulo-grafico {
@@ -14,11 +17,12 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #2b3340;
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   text-align: center;
 }
 
 canvas {
-  max-width: 100% !important;
-  height: auto !important;
+  width: 100% !important;
+  height: 280px !important;
+  max-height: 280px !important;
 }

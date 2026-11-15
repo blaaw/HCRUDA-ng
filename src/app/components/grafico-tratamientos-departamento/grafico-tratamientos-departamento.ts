@@ -30,7 +30,7 @@ export class GraficoTratamientosDepartamentoComponent implements OnInit, OnChang
 
   opcionesGrafico: any = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     plugins: {
       legend: { position: 'right', labels: { font: { size: 14 } } },
       title: {
