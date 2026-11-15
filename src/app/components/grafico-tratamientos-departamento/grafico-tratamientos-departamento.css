@@ -28,3 +28,16 @@ canvas {
   max-height: 340px !important;
   margin: 0 auto;
 }
+
+@media (max-width: 768px) {
+  .contenedor-grafico {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  canvas {
+    height: 260px !important;
+    max-height: none !important;
+  }
+}

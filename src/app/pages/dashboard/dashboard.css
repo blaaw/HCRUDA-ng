@@ -46,8 +46,6 @@
 
 .seccion-graficos {
   padding: 0 20px;
-  max-height: 400px;
-  overflow: hidden;
 }
 
 .fila-graficos {
@@ -63,5 +61,11 @@
   .fila-graficos {
     grid-template-columns: 1fr;
     max-width: 100%;
+    gap: 16px;
+  }
+
+  .contenedor-grafico {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
