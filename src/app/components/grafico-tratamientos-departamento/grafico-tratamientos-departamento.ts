@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { Tratamiento } from '../../models/tratamiento.model';
@@ -16,6 +16,7 @@ export class GraficoTratamientosDepartamentoComponent implements OnInit, OnChang
   @Input() tratamientos: Tratamiento[] = [];
   @Input() medicos: Medico[] = [];
   @Input() departamentos: Departamento[] = [];
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   tipoGrafico: any = 'pie';
   datosGrafico: any = {
@@ -29,15 +30,10 @@ export class GraficoTratamientosDepartamentoComponent implements OnInit, OnChang
   };
 
   opcionesGrafico: any = {
-    responsive: true,
-    maintainAspectRatio: true,
+    responsive: false,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'right', labels: { font: { size: 14 } } },
-      title: {
-        display: true,
-        text: 'Tratamientos por Departamento',
-        font: { size: 18, weight: '600' }
-      }
+      legend: { position: 'right', labels: { font: { size: 20 } } }
     }
   };
 
@@ -47,6 +43,7 @@ export class GraficoTratamientosDepartamentoComponent implements OnInit, OnChang
 
   ngOnChanges(): void {
     this.actualizarDatos();
+    this.chart?.chart?.update();
   }
 
   actualizarDatos(): void {

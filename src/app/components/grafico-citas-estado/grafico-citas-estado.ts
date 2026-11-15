@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { Cita } from '../../models/cita.model';
@@ -12,6 +12,7 @@ import { Cita } from '../../models/cita.model';
 })
 export class GraficoCitasEstadoComponent implements OnInit, OnChanges {
   @Input() citas: Cita[] = [];
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   tipoGrafico: any = 'bar';
   datosGrafico: any = {
@@ -27,15 +28,10 @@ export class GraficoCitasEstadoComponent implements OnInit, OnChanges {
 
   opcionesGrafico: any = {
     indexAxis: 'y',
-    responsive: true,
-    maintainAspectRatio: true,
+    responsive: false,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
-      title: {
-        display: true,
-        text: 'Citas por Estado',
-        font: { size: 18, weight: '600' }
-      }
+      legend: { display: false }
     },
     scales: {
       x: { beginAtZero: true, ticks: { stepSize: 1 } },
@@ -49,6 +45,7 @@ export class GraficoCitasEstadoComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.actualizarDatos();
+    this.chart?.chart?.update();
   }
 
   actualizarDatos(): void {
