@@ -3,5 +3,5 @@
 <div class="panel-pacientes">
   <h1 class="titulo-pagina">Gestión de Pacientes</h1>
 
-  <app-tabla-pacientes [pacientes]="listaPacientes()"></app-tabla-pacientes>
+  <app-tabla-pacientes [pacientes]="listaPacientes()" (seleccionarPaciente)="mostrarDetalle($event)"></app-tabla-pacientes>
 </div>

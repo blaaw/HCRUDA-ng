@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { Paciente } from '../../models/paciente.model';
 })
 export class TablaPacientesComponent {
   @Input() pacientes: Paciente[] = [];
+  @Output() seleccionarPaciente = new EventEmitter<string>();
 
   filtroNombre = signal('');
   columnas = ['nombre', 'apellidos', 'dni', 'telefono', 'tipo'];
@@ -25,6 +26,10 @@ export class TablaPacientesComponent {
       filtro === '' ||
       (p.nombre + ' ' + p.apellidos).toLowerCase().includes(filtro)
     );
+  }
+
+  verDetalle(idPaciente: string): void {
+    this.seleccionarPaciente.emit(idPaciente);
   }
 
   trackById(_indice: number, elemento: { id: string }): string {
