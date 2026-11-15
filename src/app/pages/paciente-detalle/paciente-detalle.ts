@@ -27,8 +27,8 @@ export class PaginaPacienteDetalle implements OnInit {
   cargarPaciente(): void {
     const idPaciente = this.route.snapshot.paramMap.get('id');
     if (idPaciente) {
-      this.servicioPacientes.obtenerPaciente(idPaciente).subscribe(paciente => {
-        this.paciente.set(paciente);
+      this.servicioPacientes.obtenerPacientes().subscribe(lista => {
+        this.paciente.set(lista.find(paciente => paciente.id === idPaciente));
         this.cargando.set(false);
       });
     } else {
