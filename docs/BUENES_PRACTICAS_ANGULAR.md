@@ -72,8 +72,17 @@ export class ServicioUsuarios {
   }
 
   verificarCredenciales(codigo: string, contrasena: string): Observable<Usuario | undefined> {
-    return this.obtenerUsuarios().pipe(
-      map(lista => lista.find(u => u.codigo === codigo && u.contrasena === contrasena))
+    return this.http.get<any[]>(this.urlJson).pipe(
+      map(listaRaw => {
+        const item = listaRaw.find(usuario => usuario.id === codigo && usuario.password === contrasena);
+        if (!item) return undefined;
+        return {
+          codigo: item.id,
+          nombre: item.nombre,
+          rol: item.rol,
+          contrasena: item.password
+        };
+      })
     );
   }
 }
@@ -94,7 +103,8 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-- Manejar errores HTTP con `catchError` y `of()` (never dejar una petición sin manejo de error).
+- Manejar errores HTTP con `catchError` y `of()` (nunca dejar una petición sin manejo de error).
+- **Estado actual:** solo `ServicioUsuarios` tiene `catchError`; pacientes, médicos, citas, tratamientos y departamentos aún no lo implementan (ver `docs/ESTADO_ACTUAL.md`).
 - **NUNCA** usar SnackBar para mensajes de error; mostrar en pantalla directamente.
 
 ---

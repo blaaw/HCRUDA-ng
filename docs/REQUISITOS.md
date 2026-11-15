@@ -1,7 +1,9 @@
 # HCRUDA-ng — REQUISITOS.md (Requisitos del proyecto)
 
 > Sintetiza los requisitos funcionales y técnicos de HCRUDA-ng, adaptados a Angular (v22) a partir de `docs/HCRUDA_PROJECT.md`, `docs/MODELO_DATOS_Y_CLASES.md`, `docs/ESTRUCTURA_ARCHIVOS_Y_PAGINAS.md`, `docs/CRUD_PAGINAS_JSON.md` y el manual `ANGULAR PARTE1.docx`.
-> **Leer junto con `docs/AGENTS.md`.**
+> **Leer junto con `docs/ESTADO_ACTUAL.md`.**
+>
+> **Este documento es la especificación del proyecto.** El estado real de implementación, el avance por requisito y la comparación con el manual Word se mantienen en `docs/ESTADO_ACTUAL.md`. Si hay diferencias entre lo previsto aquí y lo implementado, `ESTADO_ACTUAL.md` refleja la realidad.
 
 ---
 

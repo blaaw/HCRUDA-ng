@@ -1,131 +1,238 @@
 # HCRUDA-ng — PAGINAS_COMPONENTES.md (Páginas y componentes de la aplicación)
 
-> Define cada página y componente de HCRUDA-ng con sus responsabilidades, campos, filtros y operaciones CRUD.
-> **Leer junto con `docs/AGENTS.md`, `docs/REQUISITOS.md` y `docs/MODELO_DATOS.md`.**
+> Define cada página y componente de HCRUDA-ng con su estado real, responsabilidades, campos, filtros y operaciones.
+> **Leer junto con `docs/REQUISITOS.md`, `docs/ESTADO_ACTUAL.md` y `docs/MODELO_DATOS.md`.**
+>
+> Estado: 16 de noviembre de 2026 · commit `fa8276e`.
 
 ---
 
-## 1. Página Login (`/login`) — IMPLEMENTADA
+## 1. Página Login (`/login`) — ✅ IMPLEMENTADA
 
 **Responsabilidad:** Página de entrada única de la aplicación.
 
 - Formulario de acceso con **código de usuario** y contraseña.
 - Validación de campos vacíos antes de enviar.
-- Al autenticar, guarda sesión en `sessionStorage` y redirige al dashboard.
-- Enlace a la página de registro.
-- Uso obligatorio de `setTimeout` (pequeña pausa antes de redirigir, requisito del curso).
+- Autentica contra `/json/usuarios.json` mediante `ServicioUsuarios.verificarCredenciales()`.
+- Al autenticar, guarda `{ codigo, nombre, rol }` en `sessionStorage` y redirige al dashboard con `setTimeout` (500 ms).
+- Si ya hay sesión, redirige directamente al dashboard desde `ngOnInit`.
 - Mensajes de error mostrados en pantalla directamente (sin SnackBar).
-- Autentica contra `/json/usuarios.json` (mapea `id`→`codigo`, `password`→`contrasena`).
+- Mapea `id`→`codigo` y `password`→`contrasena`.
+
+**Pendiente:**
+- Validación con expresiones regulares.
+- Enlace a `/registro` funcional: la ruta no existe y `login.ts` no importa `RouterLink`, por lo que el `routerLink` actual es inerte.
 
 **Nombres en español (TS):** `codigoUsuario`, `contrasenaUsuario`, `estaCargando`, `mensajeError`, `iniciarSesion()`, `servicioUsuarios`.
 
 ---
 
-## 2. Página Registro (`/registro`) — PENDIENTE
+## 2. Página Registro (`/registro`) — ❌ PENDIENTE
 
 **Responsabilidad:** Alta de nuevo usuario (médico o enfermero).
 
-- Campos: nombre, apellidos, DNI, email, rol, contraseña, confirmar contraseña.
-- Validación con expresiones regulares (formato DNI, longitud de contraseña, campos obligatorios).
+- Campos previstos: nombre, apellidos, DNI, email, rol, contraseña y confirmar contraseña.
+- Validación con expresiones regulares (formato DNI, email, longitud de contraseña, campos obligatorios).
+- Persistencia prevista en `localStorage`.
 - Al registrar con éxito, redirige al login.
 
 ---
 
-## 3. Página Dashboard (`/dashboard`) — IMPLEMENTADA
+## 3. Página Dashboard (`/dashboard`) — ✅ IMPLEMENTADA
 
 **Responsabilidad:** Panel principal. Solo accesible con sesión iniciada (protegido por `SesionGuard`).
 
-- **Header** con logo, título, bloque de usuario (avatar + nombre y rol) y botón Cerrar sesión.
-- **Menú lateral** (sidenav) con navegación a todas las páginas.
-- **Resumen**: tarjetas con conteos de pacientes, doctores y citas.
-- **Tabla pacientes**: búsqueda por nombre + tabla (Nombre, Apellidos, DNI, Tipo, Acción). Clic en fila para detalle.
-- **Tabla doctores**: filtros por nombre y departamento + tabla (Nombre, Apellidos, Especialidad, Departamento, Acción).
-- **Cerrar sesión**: limpia `sessionStorage` y redirige a `/login`.
-- `setTimeout` para mensaje de bienvenida (requisito del curso).
+**Diseño actual (4 zonas):**
 
-**Nombres en español (TS):** `usuarioConectado`, `listaPacientes`, `listaMedicos`, `cargarInformacion()`, `cerrarSesion()`, `irAPagina()`, `verDetallePaciente()`, `rastrearPorId()`.
+1. **Menú horizontal** `app-menu-simple` en la parte superior.
+2. **2 tarjetas de resumen** al 50 %:
+   - Pacientes: contador + botón "Ver todos" → `/pacientes`.
+   - Doctores: contador + botón "Ver todos" → `/doctores`.
+3. **2 gráficos** al 50 %:
+   - `app-grafico-citas-estado`: citas agrupadas por estado (barras horizontales).
+   - `app-grafico-tratamientos-departamento`: tratamientos por departamento (tarta).
+4. **Cerrar sesión** desde el menú: limpia `sessionStorage` y redirige a `/login`.
 
----
+**Diferencias con `docs/REQUISITOS.md`:**
+- No hay sidebar; el menú es horizontal.
+- No hay tablas de pacientes/doctores en el dashboard; viven en sus propias páginas.
+- No hay componente de citas ni resumen textual de tratamientos; se sustituyeron por gráficos.
+- Es un rediseño aprobado por el usuario.
 
-## 4. Página Pacientes (`/pacientes`) — PENDIENTE
-
-**Responsabilidad:** CRUD completo de pacientes (tabla para este tipo de objeto).
-
-- Formulario de alta (nombre, apellidos, DNI, teléfono, tipo).
-- Tabla con filtros (search por nombre + select por tipo).
-- Detalle del paciente en **modo ficha**.
-- Alta, modificación y eliminación con validación del modelo (`paciente.esValido()`).
-- Persistencia en `sessionStorage` tras cada CRUD.
+**Nombres en español (TS):** `listaPacientes`, `listaMedicos`, `listaDepartamentos`, `listaCitas`, `listaTratamientos`, `cantidadPacientes`, `cantidadMedicos`, `cargarInformacion()`, `irAPagina()`.
 
 ---
 
-## 5. Página Doctores (`/doctores`) — PENDIENTE
+## 4. Página Pacientes (`/pacientes`) — 🟡 PARCIAL
 
-**Responsabilidad:** CRUD completo de doctores (modo ficha para este tipo).
+**Responsabilidad:** Listado y consulta de pacientes.
 
-- Formulario de alta (nombre, apellidos, DNI, especialidad, departamento).
-- Tabla con filtros (search por nombre + select por departamento).
-- Detalle del doctor en **modo ficha** con botones Editar y Eliminar.
+**Implementado:**
+- Carga de pacientes con `ServicioPacientes.obtenerPacientes()`.
+- Tabla Material (`app-tabla-pacientes`) con columnas: Nombre, Apellidos, DNI, Teléfono, Tipo.
+- Filtro por nombre/apellidos con `[(ngModel)]` y signal `filtroNombre`.
+- Clic en fila o botón de detalle → `/pacientes/:id`.
+- Etiqueta de tipo con `<span class="etiqueta">` (sin `mat-badge`).
+- Mensaje inline si no hay resultados.
+
+**Pendiente:**
+- Formulario de alta.
+- Edición y eliminación.
+- Persistencia en `localStorage`/`sessionStorage`.
+- Ordenación por columnas.
+- Validación con `PacienteClass.esValido()`.
 
 ---
 
-## 6. Página Citas (`/citas`) — PENDIENTE
+## 5. Página Doctores (`/doctores`) — 🟡 PARCIAL
+
+**Responsabilidad:** Listado y consulta de doctores.
+
+**Implementado:**
+- Carga de médicos y departamentos con `ServicioMedicos` y `ServicioDepartamentos`.
+- Tabla Material (`app-tabla-medicos`) con columnas: Nombre, Apellidos, DNI, Especialidad, Departamento, Acción.
+- Filtro por nombre/apellidos y por departamento (`mat-select` + `[(ngModel)]`).
+- Nombre del departamento resuelto en el componente con `find`.
+- Clic en fila o botón de visibilidad → `/doctores/:id`.
+
+**Pendiente:**
+- Formulario de alta.
+- Edición y eliminación.
+- Persistencia.
+- Ordenación por columnas.
+- Validación con `MedicoClass.esValido()`.
+
+---
+
+## 6. Página Citas (`/citas`) — ❌ PENDIENTE
 
 **Responsabilidad:** CRUD completo de citas.
 
-- Listado, alta, modificación, eliminación.
+- Listado, alta, modificación y eliminación.
 - Campos: paciente, médico, fecha, hora, motivo, estado.
 - Filtrado por fecha, médico, paciente o estado.
-- Ordenado por distintos campos.
-- Relación: cita tiene 1 médico y 1 paciente (claves foráneas `pacienteId`, `medicoId`).
+- Ordenación por distintos campos.
+- Relación: cita tiene 1 médico y 1 paciente (`pacienteId`, `medicoId`).
+- El enlace existe en el menú, pero no hay ruta ni componente.
 
 ---
 
-## 7. Página Tratamientos (`/tratamientos`) — PENDIENTE
+## 7. Página Tratamientos (`/tratamientos`) — ❌ PENDIENTE
 
 **Responsabilidad:** CRUD completo de tratamientos.
 
-- Listado, alta, modificación, eliminación.
-- Campos: descripción, fecha inicio, estado, médico, paciente.
+- Listado, alta, modificación y eliminación.
+- Campos: descripción, fecha de inicio, estado, médico, paciente.
 - Relación: tratamiento tiene 1 médico y 1 paciente.
+- El enlace existe en el menú, pero no hay ruta ni componente.
 
 ---
 
-## 8. Componente Detalle (ruta con parámetro)
+## 8. Páginas de detalle (ruta con parámetro) — ✅ IMPLEMENTADAS
 
-**Responsabilidad:** Mostrar el detalle de una entidad (ruta `/detalle/:tipo/:id`).
+### 8.1 `PacienteDetalle` (`/pacientes/:id`)
 
-- Recibe el `id` por parámetro de ruta (`ActivatedRoute`, `paramMap`).
-- Recupera la entidad mediante el servicio.
-- Muestra los datos en modo ficha.
-- Botón Volver (`Location.back()`) y botón Guardar/Actualizar.
+- Lee el `id` con `ActivatedRoute` (`route.params.subscribe` + `snapshot.paramMap.get('id')`).
+- Llama a `ServicioPacientes.obtenerPaciente(id)`.
+- Usa `signal<Paciente | undefined>` y `signal(true)` para el estado de carga.
+- Muestra nombre y apellidos en mayúsculas (`UpperCasePipe`), foto (`foto` del JSON o `pravatar` con el id como semilla), DNI, teléfono y tipo.
+- Botón **Volver a pacientes** → `Router.navigate(['/pacientes'])`.
+- Si no encuentra el paciente, muestra "No se encontró el paciente".
 
----
+### 8.2 `MedicoDetalle` (`/doctores/:id`)
 
-## 9. Componente Menú / Navegación
+- Misma estructura que la ficha de paciente.
+- Llama a `ServicioMedicos.obtenerMedico(id)`.
+- Muestra nombre, apellidos, DNI, especialidad y departamento.
+- **No** muestra foto (decisión del usuario).
+- Botón **Volver a doctores** → `Router.navigate(['/doctores'])`.
 
-**Responsabilidad:** Menú de navegación reutilizable.
-
-- Componente standalone reutilizable.
-- Muestra enlaces de navegación según el rol del usuario logueado.
-- Solo aparece si el usuario está logueado.
-
----
-
-## 10. Comunicación entre componentes
-
-| Mecanismo | Uso en el proyecto |
-|-----------|-------------------|
-| `@Input()` / `@Output()` | Padre ↔ hijo |
-| Servicios | Estado compartido entre páginas no relacionadas |
-| Signals | Contadores reactivos |
-| `sessionStorage` / `localStorage` | Sesión y persistencia de CRUD entre recargas |
+**Pendiente en ambas fichas:**
+- Manejo de error HTTP (si falla la petición, se quedan en "Cargando...").
+- Botones de editar/eliminar cuando exista el CRUD.
 
 ---
 
-## 11. Eventos requeridos
+## 9. Componente Menú / Navegación (`app-menu-simple`) — ✅ IMPLEMENTADO
 
-- `click`: botones de guardar, eliminar, editar, cerrar sesión, menú.
-- `keypress` / `input`: búsqueda por nombre.
-- `change`: selects de filtro (tipo, departamento, estado).
-- `setInterval` / `setTimeout`: uso obligatorio del curso.
+**Responsabilidad:** Menú horizontal reutilizable, presente en todas las páginas salvo login.
+
+- Componente standalone sin `@Input`/`@Output`.
+- Logo + enlaces: Dashboard, Pacientes, Doctores, Citas, Tratamientos.
+- `RouterLinkActive` + `routerLinkActiveOptions: { exact: true }` para resaltar la sección activa.
+- Perfil de sesión: avatar con la inicial, nombre y rol.
+- Botón **Salir** en rojo: limpia `sessionStorage` y navega a `/login`.
+- Lee la sesión de `sessionStorage` en el constructor y la guarda en un signal.
+
+**Pendiente:**
+- `exact: true` hace que "Pacientes"/"Doctores" no se resalten en las fichas de detalle.
+- Los enlaces a Citas y Tratamientos no tienen ruta todavía.
+
+---
+
+## 10. Componentes de tabla
+
+### 10.1 `app-tabla-pacientes`
+
+- `@Input() pacientes: Paciente[]`.
+- `@Output() seleccionarPaciente = new EventEmitter<string>()`.
+- Signal `filtroNombre`.
+- Getter `pacientesFiltrados` que filtra por nombre + apellidos.
+- Tabla Material con `mat-table`, `mat-header-cell`, `mat-cell`, `mat-row`.
+- Emite el id al hacer clic en una fila.
+
+### 10.2 `app-tabla-medicos`
+
+- `@Input() medicos: Medico[]` y `@Input() departamentos: Departamento[]`.
+- `@Output() seleccionarMedico = new EventEmitter<string>()`.
+- Signals `filtroNombre` y `filtroDepartamento`.
+- Getter `medicosFiltrados` que combina ambos filtros.
+- `obtenerNombreDepartamento(id)` con `find` local.
+- Tabla Material con columna de acción (`mat-icon-button`).
+
+---
+
+## 11. Componentes de gráficos
+
+### 11.1 `app-grafico-citas-estado`
+
+- `@Input() citas: Cita[]`.
+- Chart.js tipo `bar` horizontal (`indexAxis: 'y'`).
+- Cuenta citas por estado: pendiente, confirmada, completada, cancelada.
+- `responsive: false`, `maintainAspectRatio: false`, altura fija en CSS.
+- `@ViewChild(BaseChartDirective)` + `chart.update()` en `ngOnChanges`.
+
+### 11.2 `app-grafico-tratamientos-departamento`
+
+- `@Input() tratamientos`, `medicos`, `departamentos`.
+- Chart.js tipo `pie`.
+- Agrupa tratamientos por departamento resolviendo `medicoId` → `departamentoId`.
+- Misma estrategia de tamaño fijo y actualización manual.
+
+---
+
+## 12. Comunicación entre componentes
+
+| Mecanismo | Uso real en el proyecto |
+|-----------|-------------------------|
+| `@Input()` | Tablas y gráficos reciben datos del padre |
+| `@Output()` | Tablas emiten el id seleccionado al padre |
+| Servicios | Carga de datos HTTP en páginas y componentes |
+| Signals | Listas, filtros, estado de carga y sesión |
+| `sessionStorage` | Sesión del usuario |
+| `localStorage` | ⏳ Pendiente para el CRUD |
+
+---
+
+## 13. Eventos y utilidades
+
+| Elemento | Uso real |
+|----------|----------|
+| `click` | Botones, filas, menú, logout |
+| `input` | `[(ngModel)]` en login y filtros (sin manejador `(input)` explícito) |
+| `change` | `mat-select` con `[(ngModel)]` (sin manejador `(change)` explícito) |
+| `ngSubmit` | Formulario de login |
+| `setTimeout` | Redirección tras login |
+| `setInterval` | ❌ Pendiente |
+| Pipes | `UpperCasePipe` en las fichas |
+| `@if` / `@else` / `@for` | Control de flujo moderno en todas las plantillas |

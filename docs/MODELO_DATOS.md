@@ -1,7 +1,9 @@
 # HCRUDA-ng — MODELO_DATOS.md (Modelo de datos, clases y relaciones)
 
 > Modelo de datos de HCRUDA-ng adaptado a TypeScript/Angular. Define interfaces, clases de modelo con lógica de negocio, relaciones y datos de seed (JSON).
-> **Leer junto con `docs/AGENTS.md` y `docs/REQUISITOS.md`.**
+> **Leer junto con `docs/REQUISITOS.md` y `docs/ESTADO_ACTUAL.md`.**
+>
+> Estado: 16 de noviembre de 2026 · commit `fa8276e`.
 
 ---
 
@@ -9,13 +11,13 @@
 
 - No hay servidor SQL ni BD persistente en esta entrega.
 - Los datos iniciales ("semilla") viven en **archivos JSON** en `public/json/` (servidos en la raíz del servidor, accesibles vía `/json/<archivo>.json`).
-- Al cargar la app, esos JSON se leen mediante `HttpClient` y se instancian como **objetos TypeScript** en memoria.
-- La sesión del usuario y los cambios del CRUD se guardan en `sessionStorage` / `localStorage` (requisito de la entrega).
-- Al recargar, se lee de `sessionStorage` si existe; si no, se vuelve a leer el JSON original.
+- Al cargar la app, esos JSON se leen mediante `HttpClient` y se manejan como **objetos planos tipados con las interfaces**.
+- La sesión del usuario se guarda en `sessionStorage`. Los cambios del CRUD se guardarán en `localStorage`/`sessionStorage` cuando se implementen.
+- **Estado actual:** los servicios devuelven los objetos planos del JSON; las clases de modelo existen con sus métodos, pero todavía no se instancian en el flujo de datos. Se aprovecharán al implementar el CRUD.
 
 ## 2. Interfaces TypeScript (modelo de datos)
 
-Cada entidad se define como una `interface` en `src/app/models/`. Ejemplo de convención (nombres en español donde no sea de Angular):
+Cada entidad se define como una `interface` en `src/app/models/`. Convención de nombres en español donde no sea de Angular:
 
 ```typescript
 export interface Usuario {
@@ -47,6 +49,7 @@ export interface Paciente {
   dni: string;
   telefono: string;
   tipo: "urgencia" | "planta" | "casa";
+  foto?: string;       // URL opcional; si falta se usa pravatar
 }
 
 export interface Cita {
@@ -73,7 +76,18 @@ export interface Tratamiento {
 
 ## 3. Clases de modelo (lógica de negocio)
 
-Además de las interfaces, crear una **clase por entidad** en `src/app/models/` que encapsule campos, constructor, `esValido()`, `aObjetoPlano()` y **al menos 1 método adicional** (total ≥ 3 métodos). La clase no manipula el DOM, no llama a `HttpClient` ni a `sessionStorage`. Solo datos y lógica de negocio.
+Además de las interfaces, cada entidad tiene una **clase** en `src/app/models/` con constructor, `esValido()`, `aObjetoPlano()` y **al menos 1 método adicional** (total ≥ 3 métodos). La clase no manipula el DOM, no llama a `HttpClient` ni a `sessionStorage`.
+
+### Métodos implementados
+
+| Clase | Constructor | `esValido()` | `aObjetoPlano()` | Método propio |
+|-------|-------------|--------------|------------------|---------------|
+| `UsuarioClass` | ✅ | ✅ | ✅ | `verificarContrasena()` |
+| `DepartamentoClass` | ✅ | ✅ | ✅ | `resumen()` |
+| `MedicoClass` | ✅ | ✅ | ✅ | `cambiarEspecialidad()` |
+| `PacienteClass` | ✅ | ✅ | ✅ | `cambiarTipo()` |
+| `CitaClass` | ✅ | ✅ | ✅ | `cambiarEstado()` |
+| `TratamientoClass` | ✅ | ✅ | ✅ | `finalizar()` |
 
 Ejemplo (`src/app/models/usuario.model.ts`):
 
@@ -91,12 +105,10 @@ export class UsuarioClass implements Usuario {
     this.contrasena = contrasena;
   }
 
-  // Método 1: verificar contraseña
   verificarContrasena(contrasenaIngresada: string): boolean {
     return this.contrasena === contrasenaIngresada;
   }
 
-  // Método 2: conversión a objeto plano (JSON/storage)
   aObjetoPlano(): object {
     return {
       codigo: this.codigo,
@@ -106,14 +118,13 @@ export class UsuarioClass implements Usuario {
     };
   }
 
-  // Método 3: validar campos obligatorios
   esValido(): boolean {
     return !!this.codigo && !!this.nombre && !!this.rol && !!this.contrasena;
   }
 }
 ```
 
-> Requisito del curso: cada objeto debe tener constructor y **≥ 3 métodos adicionales**. Aplicar el mismo patrón a `Departamento`, `Medico`, `Paciente`, `Cita`, `Tratamiento`.
+> Requisito del curso: cada objeto debe tener constructor y **≥ 3 métodos adicionales**. El patrón se aplica a las 6 entidades.
 
 ## 4. Relaciones (claves foráneas simuladas)
 
@@ -136,14 +147,14 @@ const medico = medicos.find(m => m.id === cita.medicoId);
 
 ## 5. Archivos JSON de seed (`public/json/`)
 
-| Archivo | Ruta de acceso | Contenido | Mínimo |
-|---------|---------------|-----------|--------|
-| `departamentos.json` | `/json/departamentos.json` | Lista de departamentos | 3 items |
-| `medicos.json` | `/json/medicos.json` | Médicos con `departamentoId` | 5 items |
-| `pacientes.json` | `/json/pacientes.json` | Pacientes con `tipo` | 8 items |
-| `citas.json` | `/json/citas.json` | Citas con `pacienteId` y `medicoId` | 6 items |
-| `tratamientos.json` | `/json/tratamientos.json` | Tratamientos | 4 items |
-| `usuarios.json` | `/json/usuarios.json` | Usuarios de login (rol médico/enfermero) | 2 items |
+| Archivo | Ruta de acceso | Contenido | Mínimo | Actual |
+|---------|---------------|-----------|--------|--------|
+| `departamentos.json` | `/json/departamentos.json` | Lista de departamentos | 3 items | 3 |
+| `medicos.json` | `/json/medicos.json` | Médicos con `departamentoId` | 5 items | 5 |
+| `pacientes.json` | `/json/pacientes.json` | Pacientes con `tipo` y `foto` opcional | 8 items | 8 |
+| `citas.json` | `/json/citas.json` | Citas con `pacienteId` y `medicoId` | 6 items | 6 |
+| `tratamientos.json` | `/json/tratamientos.json` | Tratamientos | 4 items | 4 |
+| `usuarios.json` | `/json/usuarios.json` | Usuarios de login (rol médico/enfermero) | 2 items | 2 |
 
 Formato: array de objetos planos (sin métodos):
 
@@ -153,12 +164,44 @@ Formato: array de objetos planos (sin métodos):
 ]
 ```
 
-> **Importante:** El JSON usa `id` y `password`. El servicio de usuarios debe mapear estos campos a `codigo` y `contrasena` del modelo de la app antes de usarlos.
+Ejemplo de paciente con foto:
+
+```json
+{
+  "id": "P001",
+  "nombre": "Luis Martín",
+  "apellidos": "Hernández",
+  "dni": "11111111A",
+  "telefono": "600111222",
+  "tipo": "urgencia",
+  "foto": "https://i.pravatar.cc/150?img=1"
+}
+```
+
+> **Importante:** El JSON usa `id` y `password`. El servicio de usuarios mapea estos campos a `codigo` y `contrasena` del modelo de la app antes de usarlos.
 
 ## 6. Flujo de carga inicial (seed)
 
-1. El servicio de datos hace `this.http.get<any[]>("/json/entidad.json")`.
-2. Se mapean los campos del JSON al modelo de la app (ej. `id` → `codigo`, `password` → `contrasena`).
-3. Se crean instancias de la clase: `new UsuarioClass(item.codigo, item.nombre, ...)`.
-4. El array de instancias se mantiene en memoria (servicio) y se expone como `Observable`.
-5. Tras cada operación CRUD, persistir en `sessionStorage`/`localStorage` con `JSON.stringify(array.map(o => o.aObjetoPlano()))`.
+**Estado actual:**
+
+1. El servicio hace `this.http.get<Entidad[]>("/json/entidad.json")`.
+2. Devuelve el array de objetos planos tipado con la interfaz.
+3. La página se suscribe y guarda el array en un `signal`.
+4. La vista pinta los datos.
+5. `ServicioUsuarios` mapea `id`→`codigo` y `password`→`contrasena`.
+
+**Flujo previsto al implementar el CRUD:**
+
+1. Leer de `localStorage` si existe; si no, cargar el JSON original.
+2. Convertir cada objeto plano en una instancia de la clase (`new PacienteClass(...)`).
+3. Mantener el array de instancias en memoria (servicio) y exponerlo como `Observable`.
+4. Tras cada operación CRUD, persistir con `JSON.stringify(array.map(o => o.aObjetoPlano()))`.
+5. Al recargar, reconstruir las instancias desde el storage.
+
+## 7. Notas de implementación
+
+- `Paciente` incluye `foto?: string`; la ficha usa `foto` o `https://i.pravatar.cc/150?u=<id>` como respaldo.
+- `Medico` no tiene foto (decisión del usuario).
+- Los servicios de citas, tratamientos y departamentos solo tienen `obtener...()`; no hay CRUD todavía.
+- `ServicioMedicos.obtenerMedico(id)` y `ServicioPacientes.obtenerPaciente(id)` hacen la petición HTTP y el `find` dentro de `map`.
+- `ServicioUsuarios.verificarCredenciales(codigo, contrasena)` hace la petición HTTP, busca por `id` + `password` y devuelve el usuario mapeado.
