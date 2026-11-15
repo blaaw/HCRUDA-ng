@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuSimpleComponent } from '../../components/menu-simple/menu-simple';
@@ -13,8 +13,8 @@ import { Paciente } from '../../models/paciente.model';
   styleUrl: './paciente-detalle.css'
 })
 export class PaginaPacienteDetalle implements OnInit {
-  paciente?: Paciente;
-  cargando = true;
+  paciente = signal<Paciente | undefined>(undefined);
+  cargando = signal(true);
 
   private route = inject(ActivatedRoute);
   private servicioPacientes = inject(ServicioPacientes);
@@ -28,11 +28,11 @@ export class PaginaPacienteDetalle implements OnInit {
     const idPaciente = this.route.snapshot.paramMap.get('id');
     if (idPaciente) {
       this.servicioPacientes.obtenerPaciente(idPaciente).subscribe(paciente => {
-        this.paciente = paciente;
-        this.cargando = false;
+        this.paciente.set(paciente);
+        this.cargando.set(false);
       });
     } else {
-      this.cargando = false;
+      this.cargando.set(false);
     }
   }
 

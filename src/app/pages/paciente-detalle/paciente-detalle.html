@@ -1,21 +1,21 @@
 <app-menu-simple></app-menu-simple>
 
 <div class="panel-detalle">
-  @if (cargando) {
+  @if (cargando()) {
     <p class="mensaje">Cargando paciente...</p>
-  } @else if (paciente) {
-    <h1 class="titulo-detalle">{{ paciente.nombre | uppercase }} {{ paciente.apellidos | uppercase }}</h1>
+  } @else if (paciente()) {
+    <h1 class="titulo-detalle">{{ paciente()!.nombre | uppercase }} {{ paciente()!.apellidos | uppercase }}</h1>
 
     <div class="tarjeta-detalle">
       <img class="foto-perfil"
-           [src]="paciente.foto || 'https://i.pravatar.cc/150?u=' + paciente.id"
-           [alt]="'Foto de ' + paciente.nombre" />
+           [src]="paciente()!.foto || 'https://i.pravatar.cc/150?u=' + paciente()!.id"
+           [alt]="'Foto de ' + paciente()!.nombre" />
 
       <div class="datos">
-        <p><span class="etiqueta">ID:</span> {{ paciente.id }}</p>
-        <p><span class="etiqueta">DNI:</span> {{ paciente.dni }}</p>
-        <p><span class="etiqueta">Teléfono:</span> {{ paciente.telefono }}</p>
-        <p><span class="etiqueta">Tipo:</span> {{ paciente.tipo }}</p>
+        <p><span class="etiqueta">ID:</span> {{ paciente()!.id }}</p>
+        <p><span class="etiqueta">DNI:</span> {{ paciente()!.dni }}</p>
+        <p><span class="etiqueta">Teléfono:</span> {{ paciente()!.telefono }}</p>
+        <p><span class="etiqueta">Tipo:</span> {{ paciente()!.tipo }}</p>
       </div>
 
       <button class="boton-volver" (click)="volver()">Volver a pacientes</button>
