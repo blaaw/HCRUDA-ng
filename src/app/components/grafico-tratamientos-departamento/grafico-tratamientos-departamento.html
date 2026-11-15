@@ -1,4 +1,8 @@
 <div class="contenedor-grafico">
   <h3 class="titulo-grafico">Tratamientos por Departamento</h3>
-  <div id="grafico-tratamientos-departamento"></div>
+  <canvas baseChart
+    [type]="tipoGrafico"
+    [data]="datosGrafico"
+    [options]="opcionesGrafico">
+  </canvas>
 </div>

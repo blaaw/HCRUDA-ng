@@ -1,128 +1,63 @@
-import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import ApexCharts from 'apexcharts';
-import { ApexOptions } from 'apexcharts';
+import { BaseChartDirective } from 'ng2-charts';
 import { Cita } from '../../models/cita.model';
 
 @Component({
   selector: 'app-grafico-citas-estado',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BaseChartDirective],
   templateUrl: './grafico-citas-estado.html',
   styleUrl: './grafico-citas-estado.css'
 })
-export class GraficoCitasEstadoComponent implements OnInit, AfterViewInit {
+export class GraficoCitasEstadoComponent implements OnInit {
   @Input() citas: Cita[] = [];
 
-  chartOptions: ApexOptions = {
-    chart: {
-      type: 'bar',
-      height: 350,
-      toolbar: { show: false }
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-        barHeight: '60%',
-        distributed: true,
-        dataLabels: {
-          position: 'bottom'
-        }
-      }
-    },
-    colors: ['#ff9800', '#2196f3', '#4caf50', '#f44336'],
-    dataLabels: {
-      enabled: true,
-      textAnchor: 'start',
-      style: {
-        colors: ['#333'],
-        fontSize: '14px',
-        fontWeight: 600
-      },
-      formatter: function (val: any) {
-        return val + ' citas';
-      },
-      offsetX: 0,
-      offsetY: 0
-    },
-    stroke: {
-      width: 2,
-      curve: 'smooth'
-    },
-    xaxis: {
-      categories: ['Pendiente', 'Confirmada', 'Completada', 'Cancelada'],
-      labels: {
-        style: {
-          colors: '#333',
-          fontSize: '14px',
-          fontWeight: 600
-        }
-      },
+  tipoGrafico: any = 'bar';
+  datosGrafico: any = {
+    labels: ['Pendiente', 'Confirmada', 'Completada', 'Cancelada'],
+    datasets: [{
+      label: 'Citas',
+      data: [0, 0, 0, 0],
+      backgroundColor: ['#ff9800', '#2196f3', '#4caf50', '#f44336'],
+      borderColor: ['#ff9800', '#2196f3', '#4caf50', '#f44336'],
+      borderWidth: 1
+    }]
+  };
+
+  opcionesGrafico: any = {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
       title: {
-        text: 'Estado de Cita',
-        style: {
-          color: '#333',
-          fontSize: '16px',
-          fontWeight: 600
-        }
+        display: true,
+        text: 'Citas por Estado',
+        font: { size: 18, weight: '600' }
       }
     },
-    yaxis: {
-      labels: {
-        style: {
-          colors: '#333',
-          fontSize: '14px',
-          fontWeight: 600
-        }
-      },
-      title: {
-        text: 'Cantidad',
-        style: {
-          color: '#333',
-          fontSize: '16px',
-          fontWeight: 600
-        }
-      }
-    },
-    grid: {
-      borderColor: '#e1e8ed',
-      strokeDashArray: 4
+    scales: {
+      x: { beginAtZero: true, ticks: { stepSize: 1 } },
+      y: {}
     }
   };
 
-  private chart: ApexCharts | null = null;
-
   ngOnInit(): void {
-    this.chartOptions.series = [{
-      name: 'Citas',
-      data: this.contarCitasPorEstado()
-    }];
+    this.actualizarDatos();
   }
 
-  ngAfterViewInit(): void {
-    this.renderChart();
-  }
-
-  ngOnChanges(): void {
-    if (this.chart) {
-      this.chart.updateSeries([{
-        name: 'Citas',
-        data: this.contarCitasPorEstado()
-      }]);
-    }
-  }
-
-  contarCitasPorEstado(): number[] {
+  actualizarDatos(): void {
     const estados = ['pendiente', 'confirmada', 'completada', 'cancelada'];
-    return estados.map(estado =>
+    const valores = estados.map(estado =>
       this.citas.filter(c => c.estado === estado).length
     );
-  }
-
-  private renderChart(): void {
-    const options = { ...this.chartOptions };
-    const chart = new ApexCharts(document.querySelector('#grafico-citas-estado') as HTMLElement, options);
-    chart.render();
-    this.chart = chart;
+    this.datosGrafico.datasets = [{
+      label: 'Citas',
+      data: valores,
+      backgroundColor: ['#ff9800', '#2196f3', '#4caf50', '#f44336'],
+      borderColor: ['#ff9800', '#2196f3', '#4caf50', '#f44336'],
+      borderWidth: 1
+    }];
   }
 }

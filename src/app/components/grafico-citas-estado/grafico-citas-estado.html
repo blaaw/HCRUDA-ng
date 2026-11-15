@@ -1,4 +1,8 @@
 <div class="contenedor-grafico">
   <h3 class="titulo-grafico">Citas por Estado</h3>
-  <div id="grafico-citas-estado"></div>
+  <canvas baseChart
+    [type]="tipoGrafico"
+    [data]="datosGrafico"
+    [options]="opcionesGrafico">
+  </canvas>
 </div>
