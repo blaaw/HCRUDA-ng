@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { PaginaLogin } from './pages/login/login';
+import { PaginaRegistro } from './pages/registro/registro';
 import { PaginaDashboard } from './pages/dashboard/dashboard';
 import { SesionGuard } from './guards/sesion.guard';
 import { PaginaPacientes } from './pages/pacientes/pacientes';
@@ -10,6 +11,7 @@ import { PaginaDoctores } from './pages/doctores/doctores';
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: PaginaLogin },
+  { path: 'registro', component: PaginaRegistro },
   {
     path: 'dashboard',
     component: PaginaDashboard,
