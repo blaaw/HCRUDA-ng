@@ -1,0 +1,160 @@
+<div class="panel-registro">
+  <mat-card class="tarjeta-registro">
+    <div class="contenedor-logo">
+      <img src="/favicon.ico" alt="Logo HCRUDA" class="logo-registro" />
+    </div>
+
+    <mat-card-header class="cabecera-registro">
+      <mat-card-title>Crear cuenta</mat-card-title>
+      <mat-card-subtitle>Registro de usuario del hospital</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (mensajeExito()) {
+        <div class="resultado-registro" role="status">
+          <mat-icon class="icono-exito">check_circle</mat-icon>
+          <h2>Registro completado</h2>
+          <p>{{ mensajeExito() }}</p>
+
+          <div class="codigo-asignado">
+            <span>Tu código de acceso</span>
+            <strong>{{ codigoAsignado() }}</strong>
+          </div>
+
+          <p class="texto-ayuda">
+            Guarda este código: lo necesitarás para iniciar sesión. Serás redirigido al login en unos segundos.
+          </p>
+
+          <a mat-raised-button color="primary" routerLink="/login">Ir al login</a>
+        </div>
+      } @else {
+        <form [formGroup]="formularioRegistro" (ngSubmit)="registrarUsuario()" novalidate>
+          <div class="fila-campos">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre" autocomplete="given-name" />
+              @if (nombre.invalid && nombre.touched) {
+                <mat-error>
+                  @if (nombre.hasError('required')) {
+                    <span>El nombre es obligatorio.</span>
+                  } @else if (nombre.hasError('minlength')) {
+                    <span>Escribe al menos 2 caracteres.</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="apellidos" autocomplete="family-name" />
+              @if (apellidos.invalid && apellidos.touched) {
+                <mat-error>
+                  @if (apellidos.hasError('required')) {
+                    <span>Los apellidos son obligatorios.</span>
+                  } @else if (apellidos.hasError('minlength')) {
+                    <span>Escribe al menos 2 caracteres.</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="fila-campos">
+            <mat-form-field appearance="outline">
+              <mat-label>DNI</mat-label>
+              <input matInput formControlName="dni" placeholder="12345678A" autocomplete="off" />
+              @if (dni.invalid && dni.touched) {
+                <mat-error>
+                  @if (dni.hasError('required')) {
+                    <span>El DNI es obligatorio.</span>
+                  } @else if (dni.hasError('pattern')) {
+                    <span>Formato no válido: 8 números y una letra.</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" autocomplete="email" />
+              @if (email.invalid && email.touched) {
+                <mat-error>
+                  @if (email.hasError('required')) {
+                    <span>El email es obligatorio.</span>
+                  } @else if (email.hasError('email')) {
+                    <span>Escribe un email válido.</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="fila-campos">
+            <mat-form-field appearance="outline" class="campo-completo">
+              <mat-label>Rol</mat-label>
+              <mat-select formControlName="rol">
+                <mat-option value="medico">Médico</mat-option>
+                <mat-option value="enfermero">Enfermero</mat-option>
+              </mat-select>
+              @if (rol.invalid && rol.touched) {
+                <mat-error>Selecciona un rol.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="fila-campos">
+            <mat-form-field appearance="outline">
+              <mat-label>Contraseña</mat-label>
+              <input matInput type="password" formControlName="contrasena" autocomplete="new-password" />
+              <mat-hint>Mínimo 6 caracteres.</mat-hint>
+              @if (contrasena.invalid && contrasena.touched) {
+                <mat-error>
+                  @if (contrasena.hasError('required')) {
+                    <span>La contraseña es obligatoria.</span>
+                  } @else if (contrasena.hasError('minlength')) {
+                    <span>La contraseña debe tener al menos 6 caracteres.</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Confirmar contraseña</mat-label>
+              <input matInput type="password" formControlName="confirmarContrasena" autocomplete="new-password" />
+              @if (confirmarContrasena.invalid && confirmarContrasena.touched) {
+                <mat-error>
+                  @if (confirmarContrasena.hasError('required')) {
+                    <span>Confirma la contraseña.</span>
+                  }
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          @if (formularioRegistro.hasError('contrasenasDistintas') && confirmarContrasena.touched) {
+            <p class="mensaje-validacion" role="alert">Las contraseñas no coinciden.</p>
+          }
+
+          @if (mensajeError()) {
+            <div class="mensaje-error" role="alert">{{ mensajeError() }}</div>
+          }
+
+          <div class="acciones-registro">
+            <a mat-button routerLink="/login">Ya tengo una cuenta</a>
+            <button mat-raised-button color="primary" type="submit" [disabled]="estaCargando()">
+              <span class="contenido-boton">
+                @if (estaCargando()) {
+                  <mat-icon>hourglass_empty</mat-icon>
+                  <span>Registrando...</span>
+                } @else {
+                  <mat-icon>person_add</mat-icon>
+                  <span>Crear cuenta</span>
+                }
+              </span>
+            </button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

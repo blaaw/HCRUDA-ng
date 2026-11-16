@@ -1,0 +1,166 @@
+.panel-registro {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #f4f6f8;
+}
+
+.tarjeta-registro {
+  width: 100%;
+  max-width: 760px;
+  padding: 16px 20px 20px;
+}
+
+.contenedor-logo {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 8px;
+}
+
+.logo-registro {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+mat-card-header.cabecera-registro {
+  display: block;
+  padding: 0 0 12px;
+}
+
+mat-card-title {
+  text-align: center;
+  font-size: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+mat-card-subtitle {
+  text-align: center;
+  color: #4e5868;
+}
+
+.fila-campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 16px;
+}
+
+.fila-campos mat-form-field {
+  width: 100%;
+  min-width: 0;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+.mensaje-validacion {
+  color: #b5453f;
+  font-size: 14px;
+  margin: -4px 0 12px;
+}
+
+.mensaje-error {
+  color: #b5453f;
+  background: #fdecea;
+  border: 1px solid #b5453f;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.acciones-registro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.contenido-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resultado-registro {
+  text-align: center;
+  padding: 20px 8px 8px;
+}
+
+.icono-exito {
+  width: 52px;
+  height: 52px;
+  font-size: 52px;
+  color: #2e7d32;
+}
+
+.resultado-registro h2 {
+  margin: 8px 0;
+  color: #2b3340;
+  font-size: 22px;
+}
+
+.resultado-registro p {
+  color: #4e5868;
+}
+
+.codigo-asignado {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0 16px;
+  padding: 12px 24px;
+  border: 1px solid #c7d0da;
+  border-radius: 8px;
+  background: #f7f9fb;
+}
+
+.codigo-asignado span {
+  color: #4e5868;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.codigo-asignado strong {
+  color: #2b3340;
+  font-size: 28px;
+  letter-spacing: 0.08em;
+}
+
+.texto-ayuda {
+  max-width: 460px;
+  margin: 0 auto 20px;
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .panel-registro {
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .fila-campos {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-completo {
+    grid-column: auto;
+  }
+
+  .acciones-registro {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .acciones-registro > * {
+    width: 100%;
+    text-align: center;
+  }
+}
